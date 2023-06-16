@@ -1,0 +1,80 @@
+Run Burgers_1D, Iteration 1, MSE: 0.19298, L1RE: inf, L2RE: inf, Time: 309.05249214172363 seconds
+Run Burgers_1D, Iteration 2, MSE: 0.10501, L1RE: inf, L2RE: inf, Time: 298.35194635391235 seconds
+Run Burgers_1D, Iteration 3, MSE: 0.23573, L1RE: inf, L2RE: inf, Time: 298.980859041214 seconds
+Run Burgers_1D, MSE_std: 0.06665, L1RE_std: nan, L2RE_std: nan
+Run Burgers_2D, Iteration 1, MSE: 0.62081, L1RE: 5.48970, L2RE: 857.86554, Time: 937.3589401245117 seconds
+Run Burgers_2D, Iteration 2, MSE: 0.76535, L1RE: 5.65818, L2RE: 522.45453, Time: 1022.9440615177155 seconds
+Run Burgers_2D, Iteration 3, MSE: 0.74340, L1RE: 6.62595, L2RE: 724.10822, Time: 1020.0087332725525 seconds
+Run Burgers_2D, MSE_std: 0.07789, L1RE_std: 0.61319, L2RE_std: 168.84695
+Run Poisson_Classic, Iteration 1, MSE: 0.05510, L1RE: inf, L2RE: inf, Time: 361.19668316841125 seconds
+Run Poisson_Classic, Iteration 2, MSE: 0.05877, L1RE: inf, L2RE: inf, Time: 353.8624029159546 seconds
+Run Poisson_Classic, Iteration 3, MSE: 0.05700, L1RE: inf, L2RE: inf, Time: 369.9829936027527 seconds
+Run Poisson_Classic, MSE_std: 0.00183, L1RE_std: nan, L2RE_std: nan
+Run Poisson_Boltzmann2D, Iteration 1, MSE: 0.02402, L1RE: 1.66187, L2RE: 29.27362, Time: 396.2845721244812 seconds
+Run Poisson_Boltzmann2D, Iteration 2, MSE: 0.02405, L1RE: 1.72787, L2RE: 32.47660, Time: 397.98782539367676 seconds
+Run Poisson_Boltzmann2D, Iteration 3, MSE: 0.02382, L1RE: 1.60212, L2RE: 27.71633, Time: 405.2093207836151 seconds
+Run Poisson_Boltzmann2D, MSE_std: 0.00012, L1RE_std: 0.06290, L2RE_std: 2.42708
+Run Poisson3D_Complex_Geometry, Iteration 1, MSE: 0.95475, L1RE: 41.47558, L2RE: 4005.07617, Time: 795.8234939575195 seconds
+Run Poisson3D_Complex_Geometry, Iteration 2, MSE: 1.03593, L1RE: 42.51986, L2RE: 3900.36060, Time: 781.0044538974762 seconds
+Run Poisson3D_Complex_Geometry, Iteration 3, MSE: 0.94236, L1RE: 39.46529, L2RE: 3787.98901, Time: 790.3584320545197 seconds
+Run Poisson3D_Complex_Geometry, MSE_std: 0.05083, L1RE_std: 1.55254, L2RE_std: 108.56608
+Run Poisson_Equation_With_Subdomains, Iteration 1, MSE: 6.37634, L1RE: 3.99981, L2RE: 372.69827, Time: 2485.890338897705 seconds
+Run Poisson_Equation_With_Subdomains, Iteration 2, MSE: 5.82929, L1RE: 2.72407, L2RE: 185.86530, Time: 2452.446138381958 seconds
+Run Poisson_Equation_With_Subdomains, Iteration 3, MSE: 6.02962, L1RE: 4.59457, L2RE: 396.57114, Time: 2468.4667291641235 seconds
+Run Poisson_Equation_With_Subdomains, MSE_std: 0.27677, L1RE_std: 0.95569, L2RE_std: 115.37867
+Run Heat_Varying_Source, Iteration 1, MSE: 0.03867, L1RE: inf, L2RE: inf, Time: 4165.47123003006 seconds
+Run Heat_Varying_Source, Iteration 2, MSE: 0.01490, L1RE: inf, L2RE: inf, Time: 4125.713074684143 seconds
+Run Heat_Varying_Source, Iteration 3, MSE: 0.03212, L1RE: inf, L2RE: inf, Time: 4235.5922791957855 seconds
+Run Heat_Varying_Source, MSE_std: 0.01228, L1RE_std: nan, L2RE_std: nan
+Run Heat_2D_Multi_Scale, Iteration 1, MSE: 0.02154, L1RE: 1.01744, L2RE: 1.15082, Time: 1693.9547538757324 seconds
+Run Heat_2D_Multi_Scale, Iteration 2, MSE: 0.02229, L1RE: 1.08074, L2RE: 1.44282, Time: 1692.978402376175 seconds
+Run Heat_2D_Multi_Scale, Iteration 3, MSE: 0.02203, L1RE: 1.40589, L2RE: 2.76763, Time: 1688.8715324401855 seconds
+Run Heat_2D_Multi_Scale, MSE_std: 0.00038, L1RE_std: 0.20842, L2RE_std: 0.86164
+Run Heat_2D_Complex_Geometry, Iteration 1, MSE: 11.69411, L1RE: 18328528896.00000, L2RE: 1251483451392.00000, Time: 3876.2873933315277 seconds
+Run Heat_2D_Complex_Geometry, Iteration 2, MSE: 11.83247, L1RE: 17221847040.00000, L2RE: 1178472546304.00000, Time: 3714.897901058197 seconds
+Run Heat_2D_Complex_Geometry, Iteration 3, MSE: 11.04880, L1RE: 17352706048.00000, L2RE: 1193673228288.00000, Time: 3735.114502429962 seconds
+Run Heat_2D_Complex_Geometry, MSE_std: 0.41827, L1RE_std: 604717440.00000, L2RE_std: 38522015744.00000
+Run Heat_2D_Long_Time, Iteration 1, MSE: 1.13633, L1RE: 0.99820, L2RE: 1.00038, Time: 2133.847128391266 seconds
+Run Heat_2D_Long_Time, Iteration 2, MSE: 1.13633, L1RE: 0.99820, L2RE: 1.00038, Time: 2131.8217232227325 seconds
+Run Heat_2D_Long_Time, Iteration 3, MSE: 1.13633, L1RE: 0.99820, L2RE: 1.00038, Time: 2132.286377429962 seconds
+Run Heat_2D_Long_Time, MSE_std: 0.00000, L1RE_std: 0.00000, L2RE_std: 0.00000
+Run NS_Lid_Driven_Flow, Iteration 1, MSE: 0.00083, L1RE: inf, L2RE: inf, Time: 684.3327872753143 seconds
+Run NS_Lid_Driven_Flow, Iteration 2, MSE: 0.00041, L1RE: inf, L2RE: inf, Time: 698.1912071704865 seconds
+Run NS_Lid_Driven_Flow, Iteration 3, MSE: 0.00174, L1RE: inf, L2RE: inf, Time: 691.6163847446442 seconds
+Run NS_Lid_Driven_Flow, MSE_std: 0.00068, L1RE_std: nan, L2RE_std: nan
+Run NS_Back_Step_Flow, Iteration 1, MSE: 1.03926, L1RE: inf, L2RE: inf, Time: 890.8691112995148 seconds
+Run NS_Back_Step_Flow, Iteration 2, MSE: 1.08122, L1RE: inf, L2RE: inf, Time: 899.7165024280548 seconds
+Run NS_Back_Step_Flow, Iteration 3, MSE: 1.06343, L1RE: inf, L2RE: inf, Time: 886.6182155609131 seconds
+Run NS_Back_Step_Flow, MSE_std: 0.02106, L1RE_std: nan, L2RE_std: nan
+Run NS_Long_Time, Iteration 1, MSE: 511.55347, L1RE: inf, L2RE: inf, Time: 1610.9630191326141 seconds
+Run NS_Long_Time, Iteration 2, MSE: 511.14175, L1RE: inf, L2RE: inf, Time: 1621.7761068344116 seconds
+Run NS_Long_Time, Iteration 3, MSE: 511.25519, L1RE: inf, L2RE: inf, Time: 1608.8910911083221 seconds
+Run NS_Long_Time, MSE_std: 0.21266, L1RE_std: nan, L2RE_std: nan
+Run Wave_Equation_1D, Iteration 1, MSE: 0.49642, L1RE: inf, L2RE: inf, Time: 286.8523416519165 seconds
+Run Wave_Equation_1D, Iteration 2, MSE: 0.52739, L1RE: inf, L2RE: inf, Time: 307.4092161655426 seconds
+Run Wave_Equation_1D, Iteration 3, MSE: 0.48138, L1RE: inf, L2RE: inf, Time: 308.87874126434326 seconds
+Run Wave_Equation_1D, MSE_std: 0.02346, L1RE_std: nan, L2RE_std: nan
+Run Wave_Heterogeneous, Iteration 1, MSE: 0.07383, L1RE: 72.21768, L2RE: 5514.60400, Time: 627.6009664535522 seconds
+Run Wave_Heterogeneous, Iteration 2, MSE: 0.06373, L1RE: 57.20665, L2RE: 2432.33496, Time: 613.5493125915527 seconds
+Run Wave_Heterogeneous, Iteration 3, MSE: 0.03888, L1RE: 34.13022, L2RE: 4149.33105, Time: 610.164083480835 seconds
+Run Wave_Heterogeneous, MSE_std: 0.01799, L1RE_std: 19.18553, L2RE_std: 1544.47559
+Run Wave_Longtime, Iteration 1, MSE: 16.18579, L1RE: inf, L2RE: inf, Time: 2130.0282611846924 seconds
+Run Wave_Longtime, Iteration 2, MSE: 123.79304, L1RE: inf, L2RE: inf, Time: 2130.436905145645 seconds
+Run Wave_Longtime, Iteration 3, MSE: 27.78448, L1RE: inf, L2RE: inf, Time: 2125.9478278160095 seconds
+Run Wave_Longtime, MSE_std: 59.06422, L1RE_std: nan, L2RE_std: nan
+Run Gray_Scott, Iteration 1, MSE: 0.26943, L1RE: inf, L2RE: inf, Time: 678.9892060756683 seconds
+Run Gray_Scott, Iteration 2, MSE: 1.73789, L1RE: inf, L2RE: inf, Time: 684.1366000175476 seconds
+Run Gray_Scott, Iteration 3, MSE: 0.63780, L1RE: inf, L2RE: inf, Time: 678.1050343513489 seconds
+Run Gray_Scott, MSE_std: 0.76401, L1RE_std: nan, L2RE_std: nan
+Run Kuramoto_Sivashinsky_Equation, Iteration 1, MSE: 1.04179, L1RE: 29.07296, L2RE: 8616.99609, Time: 825.1443846225739 seconds
+Run Kuramoto_Sivashinsky_Equation, Iteration 2, MSE: 1.08477, L1RE: 144.04858, L2RE: 46239.71484, Time: 807.254834651947 seconds
+Run Kuramoto_Sivashinsky_Equation, Iteration 3, MSE: 1.05907, L1RE: 121.74352, L2RE: 39316.75391, Time: 800.2455751895905 seconds
+Run Kuramoto_Sivashinsky_Equation, MSE_std: 0.02163, L1RE_std: 60.97095, L2RE_std: 20024.44922
+Run Poisson2D_Inverse, Iteration 1, MSE: 0.00003, L1RE: 0.01007, L2RE: 0.01163, Time: 257.3320860862732 seconds
+Run Poisson2D_Inverse, Iteration 2, MSE: 0.00003, L1RE: 0.01140, L2RE: 0.01313, Time: 269.2423634529114 seconds
+Run Poisson2D_Inverse, Iteration 3, MSE: 0.00003, L1RE: 0.01079, L2RE: 0.01239, Time: 284.7753264904022 seconds
+Run Poisson2D_Inverse, MSE_std: 0.00000, L1RE_std: 0.00067, L2RE_std: 0.00075
+Run Heat2D_Inverse, Iteration 1, MSE: 0.00036, L1RE: 0.00770, L2RE: 0.01056, Time: 832.2963027954102 seconds
+Run Heat2D_Inverse, Iteration 2, MSE: 0.00009, L1RE: 0.00356, L2RE: 0.00472, Time: 668.1969668865204 seconds
+Run Heat2D_Inverse, Iteration 3, MSE: 0.00021, L1RE: 0.00577, L2RE: 0.00807, Time: 669.906069278717 seconds
+Run Heat2D_Inverse, MSE_std: 0.00014, L1RE_std: 0.00207, L2RE_std: 0.00293
