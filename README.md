@@ -26,3 +26,18 @@ Please read the comments in `benchmark.py` to modify the experiment configuratio
 ### Multi-GPU Training
 
 One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel.
+
+## Citation
+
+If you find out work useful, please cite our paper at:
+
+```
+@misc{hao2023pinnacle,
+      title={PINNacle: A Comprehensive Benchmark of Physics-Informed Neural Networks for Solving PDEs}, 
+      author={Zhongkai Hao and Jiachen Yao and Chang Su and Hang Su and Ziao Wang and Fanzhi Lu and Zeyu Xia and Yichi Zhang and Songming Liu and Lu Lu and Jun Zhu},
+      year={2023},
+      eprint={2306.08827},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG}
+}
+```
