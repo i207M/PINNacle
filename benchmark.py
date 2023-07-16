@@ -50,6 +50,7 @@ for pde_class in pde_list:
         pde = pde_class()
         # pde.training_points()
         # pde.use_gepinn()
+
         net = dde.nn.FNN([pde.input_dim] + parse_hidden_layers(command_args) + [pde.output_dim], "tanh", "Glorot normal")
         net = net.float()
 
@@ -63,14 +64,14 @@ for pde_class in pde_list:
 
         model = pde.create_model(net)
         model.compile(opt, loss_weights=loss_weights)
-        # model.train(**train_args)
+        # the trainer calls model.train(**train_args)
         return model
 
     def get_model_others():
         model = None
         # create a model object which support .train() method, and param @model_save_path is required
-        # create it according to command_args, return the model and wait for being trained.
-        # use trainer.add_task(get_model_other, {training args}) to schedule
+        # create the object based on command_args and return it to be trained
+        # schedule the task using trainer.add_task(get_model_other, {training args})
         return model
 
     trainer.add_task(

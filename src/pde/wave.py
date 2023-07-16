@@ -96,7 +96,7 @@ class WaveHeterogeneous(baseclass.BasePDE):
         # BCs
         def boundary_t0(x, on_initial):
             return np.isclose(x[2], bbox[4])
-        
+
         def boundary_rec(x, on_boundary):
             return on_boundary and (np.isclose(x[0], bbox[0]) or np.isclose(x[0], bbox[1]) or np.isclose(x[1], bbox[2]) or np.isclose(x[1], bbox[3]))
 
@@ -126,7 +126,7 @@ class WaveHeterogeneous(baseclass.BasePDE):
 
 class WaveEquation2D_Long(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[0, 1, 0, 1, 0, 100], a=20, m1=1, m2=1, n1=1, n2=1, p1=1, p2=1):
+    def __init__(self, bbox=[0, 1, 0, 1, 0, 100], a=np.sqrt(2), m1=1, m2=3, n1=1, n2=2, p1=1, p2=1):
         super().__init__()
 
         # output dim
