@@ -23,6 +23,7 @@ trainer = Trainer(f"{date_str}-{command_args.name}", command_args.device)
 import numpy as np
 import torch
 import deepxde as dde
+from src.model.laaf import DNN_GAAF, DNN_LAAF
 from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK
 from src.pde.burger import Burger1D, Burger2D
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
