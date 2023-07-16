@@ -1,7 +1,6 @@
 import argparse
 import time
 import os
-import re
 from trainer import Trainer
 
 os.environ["DDEBACKEND"] = "pytorch"
@@ -13,29 +12,13 @@ parser.add_argument('--hidden-layers', type=str, default="100*5")
 parser.add_argument('--loss-weight', type=str, default="")
 parser.add_argument('--lr', type=float, default=1e-3)
 parser.add_argument('--iter', type=int, default=20000)
-parser.add_argument('--logevery', type=int, default=100)
-parser.add_argument('--plotevery', type=int, default=2000)
+parser.add_argument('--log-every', type=int, default=100)
+parser.add_argument('--plot-every', type=int, default=2000)
 
 command_args = parser.parse_args()
 
 date_str = time.strftime('%m.%d-%H.%M.%S', time.localtime())
 trainer = Trainer(f"{date_str}-{command_args.name}", command_args.device)
-
-def parse_hidden_layers():
-    layers = []
-    for s in re.split(r"[,_-]",command_args.hidden_layers):
-        if '*' in s:
-            siz, num = s.split('*')
-            layers += [int(siz)] * int(num)
-        else:
-            layers += [int(s)]
-    return layers
-def parse_loss_weight():
-    if command_args.loss_weight == '': return None
-    weights = []
-    for s in re.split(r"[,_-]",command_args.loss_weight):
-        weights.append(float(s))
-    return weights
 
 import numpy as np
 import torch
@@ -47,9 +30,11 @@ from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime
 from src.pde.ns import NSEquation_Classic, NSEquation_LidDriven, NSEquation_FourCircles, NSEquation_Long
 from src.pde.poisson import PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea, PoissonND
 from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
+from src.utils.args import parse_hidden_layers, parse_loss_weight
 from src.utils.callbacks import TesterCallback, PlotCallback, LossCallback
 
-# 建议不要修改这个示例文件，请将它复制为 benchmark_xxx.py 并按照你的想法更改
+# It is recommended not to modify this example file.
+# Please copy it as benchmark_xxx.py and make changes according to your own ideas.
 pde_list = \
     [Burger1D, Burger2D] + \
     [KuramotoSivashinskyEquation, GrayScottEquation] + \
@@ -64,10 +49,10 @@ for pde_class in pde_list:
         pde = pde_class()
         # pde.training_points()
         # pde.use_gepinn()
-        net = dde.nn.FNN([pde.input_dim] + parse_hidden_layers() + [pde.output_dim], "tanh", "Glorot normal")
+        net = dde.nn.FNN([pde.input_dim] + parse_hidden_layers(command_args) + [pde.output_dim], "tanh", "Glorot normal")
         net = net.float()
 
-        loss_weights = parse_loss_weight()
+        loss_weights = parse_loss_weight(command_args)
         if loss_weights is None:
             loss_weights = np.ones(pde.num_loss)
         else:
@@ -80,20 +65,20 @@ for pde_class in pde_list:
         # model.train(**train_args)
         return model
 
-    def get_model_other():
+    def get_model_others():
         model = None
         # create a model object which support .train() method, and param @model_save_path is required
-        # create it according to command_args, return the model and wait for being trained. 
+        # create it according to command_args, return the model and wait for being trained.
         # use trainer.add_task(get_model_other, {training args}) to schedule
         return model
 
     trainer.add_task(
         get_model_dde, {
             'iterations': command_args.iter,
-            "display_every": command_args.logevery,
+            "display_every": command_args.log_every,
             'callbacks': [
-                TesterCallback(log_every=command_args.logevery),
-                PlotCallback(log_every=command_args.plotevery, fast=True),
+                TesterCallback(log_every=command_args.log_every),
+                PlotCallback(log_every=command_args.plot_every, fast=True),
                 LossCallback(verbose=True),
             ]
         }
