@@ -562,6 +562,7 @@ class Model:
         # NOTE: edited
         self.model_save_path = model_save_path
         self.display_every = display_every
+        print(f"PDE Class Name: {type(self.pde).__name__}")
 
         if backend_name == "tensorflow.compat.v1":
             if self.train_state.step == 0:

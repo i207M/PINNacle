@@ -59,33 +59,6 @@ class BasePDE():
     def num_loss(self):
         return len(self.loss_config)
 
-    @property
-    def gepinn(self):
-        pde = self.pde
-
-        def pde_wrapper(x, u):
-            res = pde(x, u)
-
-            if not isinstance(res, (list, tuple)):  # convert single pde loss to list
-                res = [res]
-            elif isinstance(res, tuple):  # convert tuple_like pde loss to list
-                res = list(res)
-
-            for r in res:  # unsqueeze pde loss of shape (batch_size,) to shape (batch_size, 1)
-                if r.dim() == 1:
-                    r = r.unsqueeze(dim=-1)
-                else:
-                    assert r.dim() == 2 and r.shape[1] == 1, "improper pde residue shape"
-
-            res_g = []
-            for j in range(self.input_dim):
-                for i in range(len(res)):
-                    res_g.append(dde.grad.jacobian(res[i], x, i=0, j=j))
-
-            return res + res_g
-
-        return pde_wrapper
-
     def trans_time_data_to_dataset(self, trange):
         data = self.ref_data
         slice = (data.shape[1] - self.input_dim + 1) // self.output_dim
@@ -163,7 +136,28 @@ class BasePDE():
                 raise ValueError("All PDE loss should be set before Boundary loss to avoid potential issues with methods like NTK")
 
     def use_gepinn(self):
-        self.pde = self.gepinn
+        def pde_wrapper(x, u): # add regularize terms to pde function
+            res = self.pde(x, u)
+
+            if not isinstance(res, (list, tuple)):  # convert single pde loss to list
+                res = [res]
+            elif isinstance(res, tuple):  # convert tuple_like pde loss to list
+                res = list(res)
+
+            for r in res:  # unsqueeze pde loss of shape (batch_size,) to shape (batch_size, 1)
+                if r.dim() == 1:
+                    r = r.unsqueeze(dim=-1)
+                else:
+                    assert r.dim() == 2 and r.shape[1] == 1, "improper pde residue shape"
+
+            res_g = []
+            for j in range(self.input_dim):
+                for i in range(len(res)):
+                    res_g.append(dde.grad.jacobian(res[i], x, i=0, j=j))
+
+            return res + res_g
+
+        self.pde = pde_wrapper
 
         config = []
         for j in range(self.input_dim):
@@ -171,12 +165,12 @@ class BasePDE():
                 config.append({"name": self.loss_config[i]['name'] + f"_grad{j}", "type": "gepinn"})
         self.loss_config = self.loss_config[:self.num_pde] + config + self.loss_config[self.num_pde:]
 
-        # reduce training points to avoid memory issues
-        if self.input_dim >= 3:
-            self.num_domain_points = min(self.num_domain_points, 8192)
-            self.num_test_points = min(self.num_test_points, 8192)
-            self.num_boundary_points = min(self.num_boundary_points, 4096)
-            self.num_initial_points = 4096
+        # # reduce training points to avoid memory issues
+        # if self.input_dim >= 3:
+        #     self.num_domain_points = min(self.num_domain_points, 8192)
+        #     self.num_test_points = min(self.num_test_points, 8192)
+        #     self.num_boundary_points = min(self.num_boundary_points, 4096)
+        #     self.num_initial_points = 4096
 
     def create_model(self, net):
         self.check()

@@ -135,3 +135,7 @@ class Trainer:
         for p in processes:
             if p is not None:
                 p.join()
+
+    def summary(self):
+        from src.utils import summary
+        summary.summary(f"runs/{self.exp_name}", len(self.tasks), self.repeat, list(map(lambda t:t[1]['iterations'], self.tasks)))

@@ -108,10 +108,10 @@ def plot_heatmap(x, y, z, path=None, vmin=None, vmax=None, num=100, title='', xl
     vals = interpolate.griddata(np.array([x, y]).T, np.array(z), (xx, yy), method='cubic')
     vals_0 = interpolate.griddata(np.array([x, y]).T, np.array(z), (xx, yy), method='nearest')
     vals[np.isnan(vals)] = vals_0[np.isnan(vals)]
-    if pde is not None:
+    if pde is not None: # cut heatmap for non-rectangle geometry
         if isinstance(pde, BaseTimePDE):
             # vals[~pde.geomtime.inside(np.stack((xx, yy), axis=2))] = np.nan
-            assert pde.geomtime.dim == 2
+            assert pde.geomtime.dim == 2, "heatmap should only be applied to 2-dim pdes"
         else:  # for BasePDE
             vals[~pde.geom.inside(np.stack((xx, yy), axis=2))] = np.nan
 
