@@ -73,9 +73,12 @@ class Trainer:
         import torch
         import deepxde as dde
 
-        device = "cuda:" + self.device[0]
-        torch.cuda.set_device(device)
-        torch.set_default_tensor_type(torch.cuda.FloatTensor)
+        if self.device[0] != 'cpu':
+            device = "cuda:" + self.device[0]
+            torch.cuda.set_device(device)
+            torch.set_default_tensor_type(torch.cuda.FloatTensor)
+        else:
+            torch.set_default_tensor_type(torch.FloatTensor)
         dde.config.set_default_float('float32')
 
         for j in range(self.repeat):

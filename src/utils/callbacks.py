@@ -120,7 +120,7 @@ class TesterCallback(Callback):
         self.mxes = []    # Maximum Error
         self.l1res = []   # L1 Relative Error
         self.l2res = []   # L2 Relative Error
-        self.crmses = []  # Mean Square Error 
+        self.crmses = []  # CSV_Loss
         self.frmses = []  # Mean Square Error in Fourier Space
 
         self.epochs_since_last_resample = 0
@@ -173,7 +173,7 @@ class TesterCallback(Callback):
         mxe = np.max(np.abs(y - self.test_y))
         l1re = mae / self.solution_l1
         l2re = np.sqrt(mse) / self.solution_l2
-        crmse = (y - self.test_y).sum() # TODO: this might be problematic since there's no clear definition of it
+        crmse = np.abs((y - self.test_y).mean())
         if self.fRMSE and self.valid_epoch % self.fRMSE_every == 0:
             frmse = self.frmse_calc(y)
         else:
