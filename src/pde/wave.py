@@ -63,7 +63,7 @@ class WaveEquation1D(baseclass.BasePDE):
 
 class WaveHeterogeneous(baseclass.BasePDE):
 
-    def __init__(self, bbox=[-1, 1, -1, 1, 0, 5], mu=(-0.5, 0), sigma=0.3):
+    def __init__(self, datapath="ref/wave_darcy.dat", bbox=[-1, 1, -1, 1, 0, 5], mu=(-0.5, 0), sigma=0.3):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -91,7 +91,7 @@ class WaveHeterogeneous(baseclass.BasePDE):
         self.pde = wave_pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/wave_darcy.dat", t_transpose=True, trange=bbox[4:])
+        self.load_ref_data(datapath, t_transpose=True)
 
         # BCs
         def boundary_t0(x, on_initial):

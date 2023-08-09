@@ -6,7 +6,7 @@ from . import baseclass
 
 class GrayScottEquation(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[-1, 1, -1, 1, 0, 200], b=0.04, d=0.1, epsilon=(1e-5, 5e-6)):
+    def __init__(self, datapath="ref/grayscott.dat", bbox=[-1, 1, -1, 1, 0, 200], b=0.04, d=0.1, epsilon=(1e-5, 5e-6)):
         super().__init__()
         # output dim
         self.output_dim = 2
@@ -33,7 +33,7 @@ class GrayScottEquation(baseclass.BaseTimePDE):
         self.pde = pde
         self.set_pdeloss(num=2)
 
-        self.load_ref_data("ref/grayscott.dat", t_transpose=False)
+        self.load_ref_data(datapath, t_transpose=False)
 
         # BC
         def boundary_ic(x, on_initial):
@@ -62,7 +62,7 @@ class GrayScottEquation(baseclass.BaseTimePDE):
 
 class KuramotoSivashinskyEquation(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[0, 2 * np.pi, 0, 1], alpha=100 / 16, beta=100 / (16 * 16), gamma=100 / (16**4)):
+    def __init__(self, datapath="ref/Kuramoto_Sivashinsky.dat", bbox=[0, 2 * np.pi, 0, 1], alpha=100 / 16, beta=100 / (16 * 16), gamma=100 / (16**4)):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -85,7 +85,7 @@ class KuramotoSivashinskyEquation(baseclass.BaseTimePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/Kuramoto_Sivashinsky.dat", t_transpose=False)
+        self.load_ref_data(datapath, t_transpose=False)
 
         # BCs
         self.add_bcs([{

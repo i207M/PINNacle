@@ -59,11 +59,26 @@ class BasePDE():
     def num_loss(self):
         return len(self.loss_config)
 
-    def trans_time_data_to_dataset(self, trange):
+    def trans_time_data_to_dataset(self, datapath):
         data = self.ref_data
         slice = (data.shape[1] - self.input_dim + 1) // self.output_dim
         assert slice * self.output_dim == data.shape[1] - self.input_dim + 1, "Data shape is not multiple of pde.output_dim"
-        t = np.linspace(trange[0], trange[1], slice)
+        
+        with open(datapath, "r") as f:
+            def extract_time(string):
+                index = string.find("t=")
+                if index == -1:
+                    return None
+                return float(string[index+2:].split(' ')[0])
+            t = None
+            for line in f.readlines():
+                if line.startswith('%') and line.count('@') == slice * self.output_dim:
+                    t = line.split('@')[1:]
+                    t = list(map(extract_time, t))
+            if t is None or None in t: 
+                raise ValueError("Reference Data not in Comsol format or does not contain time info")
+            t = np.array(t[::self.output_dim])
+
         t, x0 = np.meshgrid(t, data[:, 0])
         list_x = [x0.reshape(-1)]
         for i in range(1, self.input_dim - 1):
@@ -73,12 +88,10 @@ class BasePDE():
             list_x.append(data[:, self.input_dim - 1 + i::self.output_dim].reshape(-1))
         self.ref_data = np.stack(list_x).T
 
-    def load_ref_data(self, datapath, transform_fn=None, t_transpose=False, trange=None):
+    def load_ref_data(self, datapath, transform_fn=None, t_transpose=False):
         self.ref_data = np.loadtxt(datapath, comments="%").astype(np.float32)
         if t_transpose:  # originally used only in BaseTimePDE, but needed from some TimePDE using BasePDE as baseclass.
-            if trange is None:
-                raise ValueError("BasePDE type has no time domain, you should pass trange manually")
-            self.trans_time_data_to_dataset(trange)
+            self.trans_time_data_to_dataset(datapath)
         if transform_fn is not None:
             self.ref_data = transform_fn(self.ref_data)
 
@@ -203,7 +216,7 @@ class BaseTimePDE(BasePDE):
         super().add_bcs(config, self.geomtime)
 
     def load_ref_data(self, datapath, transform_fn=None, t_transpose=True):
-        super(BaseTimePDE, self).load_ref_data(datapath, transform_fn, t_transpose, (self.geomtime.timedomain.t0, self.geomtime.timedomain.t1))
+        super(BaseTimePDE, self).load_ref_data(datapath, transform_fn, t_transpose)
 
     def training_points(
         self,

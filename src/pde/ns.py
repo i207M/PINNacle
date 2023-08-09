@@ -7,7 +7,7 @@ from . import baseclass
 
 class NSEquation_Classic(baseclass.BasePDE):
 
-    def __init__(self, nu=1, bbox=[0, 8, 0, 8], circles=[[6, 6, 1.0], [2, 1.0, 0.5]], linear=False):
+    def __init__(self, datapath="ref/ns2d.dat", nu=1, bbox=[0, 8, 0, 8], circles=[[6, 6, 1.0], [2, 1.0, 0.5]], linear=False):
         # bbox: left(x[0]) right(x[0]) bottom(x[1]) top(x[1])
         # circles[]: center0 center1 radius
         super().__init__()
@@ -69,7 +69,7 @@ class NSEquation_Classic(baseclass.BasePDE):
         self.pde = ns_pde if not linear else ns_pde_linear
         self.set_pdeloss(names=["momentum_x", "momentum_y", "continuity"])
 
-        self.load_ref_data("ref/ns2d.dat")
+        self.load_ref_data(datapath)
 
         def boundary_left(x, on_boundary):
             return on_boundary and np.isclose(x[0], bbox[0])
@@ -129,7 +129,7 @@ class NSEquation_Classic(baseclass.BasePDE):
 
 class NSEquation_LidDriven(baseclass.BasePDE):
 
-    def __init__(self, nu=1 / 100, bbox=[0, 1, 0, 1]):
+    def __init__(self, datapath="ref/lid_driven.dat", nu=1 / 100, bbox=[0, 1, 0, 1]):
         super().__init__()
         # output dim
         self.output_config = [{'name': s} for s in ['u', 'v', 'p']]
@@ -162,7 +162,7 @@ class NSEquation_LidDriven(baseclass.BasePDE):
         self.pde = ns_pde
         self.set_pdeloss(names=["momentum_x", "momentum_y", "continuity"])
 
-        self.load_ref_data("ref/lid_driven.dat")
+        self.load_ref_data(datapath)
 
         # bc
         def boundary_top(x, on_boundary):
@@ -202,10 +202,11 @@ class NSEquation_LidDriven(baseclass.BasePDE):
         self.training_points()
 
 
-class NSEquation_FourCircles(baseclass.BasePDE):
+class NSEquation_BackStep(baseclass.BasePDE):
 
     def __init__(
         self,
+        datapath="ref/ns_0_obstacle.dat",
         nu=1 / 100,
         bbox=[0, 4, 0, 2],
         # obstacle={
@@ -259,7 +260,7 @@ class NSEquation_FourCircles(baseclass.BasePDE):
         self.pde = ns_pde
         self.set_pdeloss(names=["momentum_x", "momentum_y", "continuity"])
 
-        self.load_ref_data(f"ref/ns_{len(obstacle)}_obstacle.dat")
+        self.load_ref_data(datapath)
 
         # bcs
         def boundary_in(x, on_boundary):
@@ -307,7 +308,7 @@ class NSEquation_FourCircles(baseclass.BasePDE):
 
 class NSEquation_Long(baseclass.BaseTimePDE):
 
-    def __init__(self, nu=1 / 100, bbox=[0, 2, 0, 1, 0, 5]):
+    def __init__(self, datapath="ref/ns_long.dat", nu=1 / 100, bbox=[0, 2, 0, 1, 0, 5]):
         super().__init__()
         # output dim
         self.output_config = [{'name': s} for s in ['u', 'v', 'p']]
@@ -352,7 +353,7 @@ class NSEquation_Long(baseclass.BaseTimePDE):
         self.pde = ns_pde
         self.set_pdeloss(names=["momentum_x", "momentum_y", "continuity"])
 
-        self.load_ref_data("ref/ns_long.dat")
+        self.load_ref_data(datapath)
 
         # BC
         def boundary_in(x, on_boundary):

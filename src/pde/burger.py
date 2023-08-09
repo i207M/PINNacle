@@ -1,12 +1,13 @@
 import numpy as np
 import deepxde as dde
+import scipy
 
 from . import baseclass
 
 
 class Burger1D(baseclass.BaseTimePDE):
 
-    def __init__(self, geom=[-1, 1], time=[0, 1], nu=0.01 / np.pi):
+    def __init__(self, datapath="ref/burgers1d.dat", geom=[-1, 1], time=[0, 1], nu=0.01 / np.pi):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -27,7 +28,7 @@ class Burger1D(baseclass.BaseTimePDE):
         self.set_pdeloss()
 
         # refdata
-        self.load_ref_data("ref/burgers1d.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         def ic_func(x):
@@ -51,7 +52,7 @@ class Burger1D(baseclass.BaseTimePDE):
 
 class Burger2D(baseclass.BaseTimePDE):
 
-    def __init__(self, nu=0.001, L=4, T=1, M=1):
+    def __init__(self, datapath="ref/burgers2d.dat", icpath=("ref/burgers2d_init_u_0.dat", "ref/burgers2d_init_v_0.dat"), nu=0.001, L=4, T=1):
         super().__init__()
         # output dim
         self.output_dim = 2
@@ -81,7 +82,7 @@ class Burger2D(baseclass.BaseTimePDE):
         self.pde = burger_pde_2d
         self.set_pdeloss(num=2)
 
-        self.load_ref_data("ref/burgers2d.dat")  # TODO: this reference data might not be accurate
+        self.load_ref_data(datapath) 
 
         # BCs
         def boundary_ic(x, on_initial):
@@ -93,20 +94,10 @@ class Burger2D(baseclass.BaseTimePDE):
         def boundary_yb(x, on_boundary):
             return on_boundary and (np.isclose(x[1], 0) + np.isclose(x[1], L))
 
-        self.ic_coefs = np.loadtxt("ref/burgers2d_coef.dat")
+        self.ics = (np.loadtxt(icpath[0]), np.loadtxt(icpath[1]))
 
         def ic_func(x, component):
-            A = self.ic_coefs[:2 * (2 * L + 1)**2].reshape(2, 2 * L + 1, 2 * L + 1)
-            B = self.ic_coefs[2 * (2 * L + 1)**2:4 * (2 * L + 1)**2].reshape(2, 2 * L + 1, 2 * L + 1)
-            C = self.ic_coefs[4 * (2 * L + 1)**2:]
-
-            w = np.zeros((x.shape[0], 1))
-            for i in range(-L, L + 1):
-                for j in range(-L, L + 1):
-                    w += A[component][i][j] * np.sin(2 * np.pi * (i * x[:, 0:1] + j * x[:, 1:2])) \
-                        + B[component][i][j] * np.cos(2 * np.pi * (i * x[:, 0:1] + j * x[:, 1:2]))
-
-            return 2 * w / M + C[component]  # Note: change "divide w.max" to "devide M", where M is a constant param
+            return scipy.interpolate.LinearNDInterpolator(self.ics[component][:, :2], self.ics[component][:, 2:])(x[:, :2])
 
         self.add_bcs([
             {

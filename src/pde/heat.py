@@ -11,7 +11,7 @@ from ..utils.random import generate_heat_2d_coef
 
 class HeatDarcy(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[0, 1, 0, 1, 0, 5], A=200, m=(1, 5, 1)):
+    def __init__(self, datapath="ref/heat_darcy.dat", bbox=[0, 1, 0, 1, 0, 5], A=200, m=(1, 5, 1)):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -43,7 +43,7 @@ class HeatDarcy(baseclass.BaseTimePDE):
         self.pde = heat_pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/heat_darcy.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         def boundary_t0(x, on_initial):
@@ -69,12 +69,14 @@ class HeatDarcy(baseclass.BaseTimePDE):
 
 
 class HeatMultiscale(baseclass.BaseTimePDE):
-    PDE_COEF_1 = 1 / np.square(500 * np.pi)
-    PDE_COEF_2 = 1 / np.square(np.pi)
-    INITIAL_COEF_1 = 20 * np.pi
-    INITIAL_COEF_2 = np.pi
 
-    def __init__(self, bbox=[0, 1, 0, 1, 0, 5]):
+    def __init__(
+        self, 
+        datapath="ref/heat_multiscale.dat", 
+        bbox=[0, 1, 0, 1, 0, 5], 
+        pde_coef=(1 / np.square(500 * np.pi), 1 / np.square(np.pi)), 
+        init_coef=(20 * np.pi, np.pi),
+    ):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -89,16 +91,16 @@ class HeatMultiscale(baseclass.BaseTimePDE):
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
             u_t = dde.grad.jacobian(u, x, j=2)
 
-            return [u_t - self.PDE_COEF_1 * u_xx - self.PDE_COEF_2 * u_yy]
+            return [u_t - pde_coef[0] * u_xx - pde_coef[1] * u_yy]
 
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/heat_multiscale.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         def f_func(x):
-            return np.sin(self.INITIAL_COEF_1 * x[:, 0:1]) * np.sin(self.INITIAL_COEF_2 * x[:, 1:2])
+            return np.sin(init_coef[0] * x[:, 0:1]) * np.sin(init_coef[1] * x[:, 1:2])
 
         self.add_bcs([{
             'component': 0,
@@ -118,7 +120,7 @@ class HeatMultiscale(baseclass.BaseTimePDE):
 
 class HeatComplex(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[-8, 8, -12, 12, 0, 3]):
+    def __init__(self, datapath="ref/heat_complex.dat", bbox=[-8, 8, -12, 12, 0, 3]):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -151,7 +153,7 @@ class HeatComplex(baseclass.BaseTimePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/heat_complex.dat")
+        self.load_ref_data(datapath)
 
         def is_on_big_circle(x):
             for circle in big_circles:
@@ -194,7 +196,7 @@ class HeatComplex(baseclass.BaseTimePDE):
 
 class HeatLongTime(baseclass.BaseTimePDE):
 
-    def __init__(self, bbox=[0, 1, 0, 1, 0, 100], k=1, m1=4, m2=2):
+    def __init__(self, datapath="ref/heat_longtime.dat", bbox=[0, 1, 0, 1, 0, 100], k=1, m1=4, m2=2):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -221,7 +223,7 @@ class HeatLongTime(baseclass.BaseTimePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/heat_longtime.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         def f_func(x):

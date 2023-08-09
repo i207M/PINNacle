@@ -8,7 +8,7 @@ from ..utils.func_cache import cache_tensor
 
 class PoissonClassic(baseclass.BasePDE):
 
-    def __init__(self, scale=1):
+    def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1):
         super().__init__()
         # Output Dim
         self.output_dim = 1
@@ -34,7 +34,7 @@ class PoissonClassic(baseclass.BasePDE):
             data[:, :self.input_dim] *= scale
             return data
 
-        self.load_ref_data("ref/poisson1_cg_data.dat", transform_fn=transform_fn)
+        self.load_ref_data(datapath, transform_fn=transform_fn)
 
         def rec_boundary(x, on_boundary):
             return on_boundary and (
@@ -181,7 +181,7 @@ class Poisson2DSimple(baseclass.BasePDE):
 
 class PoissonBoltzmann2D(baseclass.BasePDE):
 
-    def __init__(self, k=8, mu=(1, 4), A=10, bbox=[-1, 1, -1, 1], circ=[(0.5, 0.5, 0.2), (0.4, -0.4, 0.4), (-0.2, -0.7, 0.1), (-0.6, 0.5, 0.3)]):
+    def __init__(self, datapath="ref/poisson_boltzmann2d.dat", k=8, mu=(1, 4), A=10, bbox=[-1, 1, -1, 1], circ=[(0.5, 0.5, 0.2), (0.4, -0.4, 0.4), (-0.2, -0.7, 0.1), (-0.6, 0.5, 0.3)]):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -209,7 +209,7 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/poisson_boltzmann2d.dat")
+        self.load_ref_data(datapath)
 
         # Boundary Condition
         def boundary_rec(x, on_boundary):
@@ -241,6 +241,7 @@ class Poisson3D(baseclass.BasePDE):
 
     def __init__(
         self,
+        datapath="ref/poisson_3d.dat",
         bbox=[0, 1, 0, 1, 0, 1],
         interface_z=0.5,
         circ=[(0.4, 0.3, 0.6, 0.2), (0.6, 0.7, 0.6, 0.2), (0.2, 0.8, 0.7, 0.1), (0.6, 0.2, 0.3, 0.1)],
@@ -281,7 +282,7 @@ class Poisson3D(baseclass.BasePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/poisson_3d.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         self.add_bcs([{'component': 0, 'function': (lambda x: 0), 'bc': (lambda _,on_boundary:on_boundary), 'type': 'neumann'}])
@@ -292,7 +293,7 @@ class Poisson3D(baseclass.BasePDE):
 
 class Poisson2DManyArea(baseclass.BasePDE):
 
-    def __init__(self, bbox=[-10, 10, -10, 10], split=(5, 5), freq=2):
+    def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -346,7 +347,7 @@ class Poisson2DManyArea(baseclass.BasePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data("ref/poisson_manyarea.dat")
+        self.load_ref_data(datapath)
 
         # BCs
         self.add_bcs([{

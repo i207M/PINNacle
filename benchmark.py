@@ -28,7 +28,7 @@ from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK
 from src.pde.burger import Burger1D, Burger2D
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
 from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime
-from src.pde.ns import NSEquation_Classic, NSEquation_LidDriven, NSEquation_FourCircles, NSEquation_Long
+from src.pde.ns import NSEquation_Classic, NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long
 from src.pde.poisson import PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea, PoissonND
 from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
 from src.utils.args import parse_hidden_layers, parse_loss_weight
@@ -40,7 +40,7 @@ pde_list = \
     [Burger1D, Burger2D] + \
     [KuramotoSivashinskyEquation, GrayScottEquation] + \
     [HeatComplex, HeatDarcy, HeatLongTime, HeatMultiscale] + \
-    [NSEquation_FourCircles, NSEquation_LidDriven, NSEquation_Long] + \
+    [NSEquation_BackStep, NSEquation_LidDriven, NSEquation_Long] + \
     [PoissonClassic, Poisson2DManyArea, Poisson3D, PoissonBoltzmann2D, PoissonND] + \
     [WaveEquation1D, WaveEquation2D_Long, WaveHeterogeneous]
 
