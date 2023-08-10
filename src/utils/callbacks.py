@@ -265,8 +265,8 @@ class TesterCallback(Callback):
         res = scipy.interpolate.LinearNDInterpolator(self.test_x_delaunay, y - self.test_y)(self.sample_x.reshape((-1, pde.input_dim)))
         resn = scipy.interpolate.NearestNDInterpolator(self.test_x, y - self.test_y)(self.sample_x.reshape((-1, pde.input_dim)))
         res[np.isnan(res)] = resn[np.isnan(res)]
-        res = res.reshape(self.sample_x.shape[:-1])
-        err = np.abs(np.fft.rfftn(res)) ** 2 / res.size
+        err = np.fft.rfftn(res, axes=tuple(range(res.ndim-1))) # transform except the last dim (pde.output_dim)
+        err = np.mean(np.abs(err) ** 2 / res.size, axis=-1) # take average through the last dim
 
         if pde.input_dim == 1:
             err_low = err[:self.fRMSE_l].mean()
