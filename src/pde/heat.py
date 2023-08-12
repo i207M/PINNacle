@@ -72,7 +72,6 @@ class HeatMultiscale(baseclass.BaseTimePDE):
 
     def __init__(
         self, 
-        datapath="ref/heat_multiscale.dat", 
         bbox=[0, 1, 0, 1, 0, 5], 
         pde_coef=(1 / np.square(500 * np.pi), 1 / np.square(np.pi)), 
         init_coef=(20 * np.pi, np.pi),
@@ -96,15 +95,17 @@ class HeatMultiscale(baseclass.BaseTimePDE):
         self.pde = pde
         self.set_pdeloss(num=1)
 
-        self.load_ref_data(datapath)
+        def ref_sol(xt):
+            return np.sin(init_coef[0] * xt[:, 0:1]) * np.sin(init_coef[1] * xt[:, 1:2]) * \
+                   np.exp(-(pde_coef[0]*init_coef[0]**2 + pde_coef[1]*init_coef[1]**2) * xt[:, 2:3])
+
+        self.ref_sol = ref_sol
 
         # BCs
-        def f_func(x):
-            return np.sin(init_coef[0] * x[:, 0:1]) * np.sin(init_coef[1] * x[:, 1:2])
 
         self.add_bcs([{
             'component': 0,
-            'function': f_func,
+            'function': ref_sol,
             'bc': (lambda _, on_initial: on_initial),
             'type': 'ic'
         }, {

@@ -52,7 +52,7 @@ class Burger1D(baseclass.BaseTimePDE):
 
 class Burger2D(baseclass.BaseTimePDE):
 
-    def __init__(self, datapath="ref/burgers2d.dat", icpath=("ref/burgers2d_init_u_0.dat", "ref/burgers2d_init_v_0.dat"), nu=0.001, L=4, T=1):
+    def __init__(self, datapath="ref/burgers2d_0.dat", icpath=("ref/burgers2d_init_u_0.dat", "ref/burgers2d_init_v_0.dat"), nu=0.001, L=4, T=1):
         super().__init__()
         # output dim
         self.output_dim = 2
