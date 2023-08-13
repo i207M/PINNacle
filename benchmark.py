@@ -6,7 +6,7 @@ from trainer import Trainer
 os.environ["DDEBACKEND"] = "pytorch"
 parser = argparse.ArgumentParser(description='PINNBench trainer')
 parser.add_argument('--name', type=str, default="benchmark")
-parser.add_argument('--device', type=str, default="0")
+parser.add_argument('--device', type=str, default="0") # set to "cpu" enables cpu training 
 parser.add_argument('--seed', type=int, default=None)
 parser.add_argument('--hidden-layers', type=str, default="100*5")
 parser.add_argument('--loss-weight', type=str, default="")
@@ -14,6 +14,7 @@ parser.add_argument('--lr', type=float, default=1e-3)
 parser.add_argument('--iter', type=int, default=20000)
 parser.add_argument('--log-every', type=int, default=100)
 parser.add_argument('--plot-every', type=int, default=2000)
+parser.add_argument('--repeat', type=int, default=1)
 
 command_args = parser.parse_args()
 
@@ -24,7 +25,7 @@ import numpy as np
 import torch
 import deepxde as dde
 from src.model.laaf import DNN_GAAF, DNN_LAAF
-from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK
+from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK, Adam_LBFGS
 from src.pde.burger import Burger1D, Burger2D
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
 from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime, HeatND
@@ -43,32 +44,30 @@ pde_list = \
     [NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long] + \
     [WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long] + \
     [KuramotoSivashinskyEquation, GrayScottEquation] + \
-    [PoissonND, HeatND]
-pde_list.append( # Multiple cases of same PDE.
-    [(Burger2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] +
-    [(Burger2D, {"datapath": "ref/burgers2d_2.dat", "icpath": ("ref/burgers2d_init_u_2.dat", "ref/burgers2d_init_v_2.dat")})] +
-    [(Burger2D, {"datapath": "ref/burgers2d_3.dat", "icpath": ("ref/burgers2d_init_u_3.dat", "ref/burgers2d_init_v_3.dat")})] +
-    [(Burger2D, {"datapath": "ref/burgers2d_4.dat", "icpath": ("ref/burgers2d_init_u_4.dat", "ref/burgers2d_init_v_4.dat")})] +
-    [(PoissonClassic, {"scale": 2})] +
-    [(PoissonClassic, {"scale": 4})] +
-    [(PoissonClassic, {"scale": 8})] +
-    [(PoissonClassic, {"scale": 16})] +
-    [(HeatMultiscale, {"init_coef": (5 * np.pi, np.pi)})] + 
-    [(HeatMultiscale, {"init_coef": (10 * np.pi, np.pi)})] +
-    [(HeatMultiscale, {"init_coef": (40 * np.pi, np.pi)})] +
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a2.dat", "a": 2})] + 
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a8.dat", "a": 8})] + 
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a16.dat", "a": 16})] + 
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a32.dat", "a": 32})] + 
-    [(WaveEquation1D, {"a": 2})] + 
-    [(WaveEquation1D, {"a": 6})] + 
-    [(WaveEquation1D, {"a": 8})] + 
-    [(WaveEquation1D, {"a": 10})] + 
-    [(HeatND, {"dim": 4})] +
-    [(HeatND, {"dim": 6})] +
-    [(HeatND, {"dim": 8})] +
+    [PoissonND, HeatND] + \
+    [(Burger2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] + \
+    [(Burger2D, {"datapath": "ref/burgers2d_2.dat", "icpath": ("ref/burgers2d_init_u_2.dat", "ref/burgers2d_init_v_2.dat")})] + \
+    [(Burger2D, {"datapath": "ref/burgers2d_3.dat", "icpath": ("ref/burgers2d_init_u_3.dat", "ref/burgers2d_init_v_3.dat")})] + \
+    [(Burger2D, {"datapath": "ref/burgers2d_4.dat", "icpath": ("ref/burgers2d_init_u_4.dat", "ref/burgers2d_init_v_4.dat")})] + \
+    [(PoissonClassic, {"scale": 2})] + \
+    [(PoissonClassic, {"scale": 4})] + \
+    [(PoissonClassic, {"scale": 8})] + \
+    [(PoissonClassic, {"scale": 16})] + \
+    [(HeatMultiscale, {"init_coef": (5 * np.pi, np.pi)})] + \
+    [(HeatMultiscale, {"init_coef": (10 * np.pi, np.pi)})] + \
+    [(HeatMultiscale, {"init_coef": (40 * np.pi, np.pi)})] + \
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a2.dat", "a": 2})] + \
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a8.dat", "a": 8})] + \
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a16.dat", "a": 16})] + \
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a32.dat", "a": 32})] + \
+    [(WaveEquation1D, {"a": 2})] + \
+    [(WaveEquation1D, {"a": 6})] + \
+    [(WaveEquation1D, {"a": 8})] + \
+    [(WaveEquation1D, {"a": 10})] + \
+    [(HeatND, {"dim": 4})] + \
+    [(HeatND, {"dim": 6})] + \
+    [(HeatND, {"dim": 8})] + \
     [(HeatND, {"dim": 10})]
-)
 
 for pde_config in pde_list:
 
@@ -116,7 +115,7 @@ for pde_config in pde_list:
         }
     )
 
-trainer.set_repeat(5)
+trainer.set_repeat(command_args.repeat)
 
 if __name__ == "__main__":
     seed = command_args.seed
@@ -124,3 +123,4 @@ if __name__ == "__main__":
         dde.config.set_random_seed(seed)
     trainer.setup(__file__, seed)
     trainer.train_all()
+    trainer.summary()

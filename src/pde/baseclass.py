@@ -149,8 +149,9 @@ class BasePDE():
                 raise ValueError("All PDE loss should be set before Boundary loss to avoid potential issues with methods like NTK")
 
     def use_gepinn(self):
+        pde_original = self.pde
         def pde_wrapper(x, u): # add regularize terms to pde function
-            res = self.pde(x, u)
+            res = pde_original(x, u)
 
             if not isinstance(res, (list, tuple)):  # convert single pde loss to list
                 res = [res]
@@ -177,13 +178,6 @@ class BasePDE():
             for i in range(self.num_pde):
                 config.append({"name": self.loss_config[i]['name'] + f"_grad{j}", "type": "gepinn"})
         self.loss_config = self.loss_config[:self.num_pde] + config + self.loss_config[self.num_pde:]
-
-        # # reduce training points to avoid memory issues
-        # if self.input_dim >= 3:
-        #     self.num_domain_points = min(self.num_domain_points, 8192)
-        #     self.num_test_points = min(self.num_test_points, 8192)
-        #     self.num_boundary_points = min(self.num_boundary_points, 4096)
-        #     self.num_initial_points = 4096
 
     def create_model(self, net):
         self.check()
