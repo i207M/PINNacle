@@ -129,7 +129,7 @@ class NSEquation_Classic(baseclass.BasePDE):
 
 class NSEquation_LidDriven(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/lid_driven.dat", nu=1 / 100, bbox=[0, 1, 0, 1]):
+    def __init__(self, datapath="ref/lid_driven_a4.dat", a=4, nu=1 / 100, bbox=[0, 1, 0, 1]):
         super().__init__()
         # output dim
         self.output_config = [{'name': s} for s in ['u', 'v', 'p']]
@@ -173,7 +173,7 @@ class NSEquation_LidDriven(baseclass.BasePDE):
 
         self.add_bcs([{
             'component': 0,
-            'function': (lambda x: 4 * x[:, 0:1] * (1 - x[:, 0:1])),
+            'function': (lambda x: a * x[:, 0:1] * (1 - x[:, 0:1])),
             'bc': boundary_top,
             'type': 'dirichlet'
         }, {

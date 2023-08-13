@@ -27,7 +27,7 @@ from src.model.laaf import DNN_GAAF, DNN_LAAF
 from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK
 from src.pde.burger import Burger1D, Burger2D
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
-from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime
+from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime, HeatND
 from src.pde.ns import NSEquation_Classic, NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long
 from src.pde.poisson import PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea, PoissonND
 from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
@@ -38,16 +38,46 @@ from src.utils.callbacks import TesterCallback, PlotCallback, LossCallback
 # Please copy it as benchmark_xxx.py and make changes according to your own ideas.
 pde_list = \
     [Burger1D, Burger2D] + \
+    [PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea] + \
+    [HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime] + \
+    [NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long] + \
+    [WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long] + \
     [KuramotoSivashinskyEquation, GrayScottEquation] + \
-    [HeatComplex, HeatDarcy, HeatLongTime, HeatMultiscale] + \
-    [NSEquation_BackStep, NSEquation_LidDriven, NSEquation_Long] + \
-    [PoissonClassic, Poisson2DManyArea, Poisson3D, PoissonBoltzmann2D, PoissonND] + \
-    [WaveEquation1D, WaveEquation2D_Long, WaveHeterogeneous]
+    [PoissonND, HeatND]
+pde_list.append( # Multiple cases of same PDE.
+    [(Burger2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] +
+    [(Burger2D, {"datapath": "ref/burgers2d_2.dat", "icpath": ("ref/burgers2d_init_u_2.dat", "ref/burgers2d_init_v_2.dat")})] +
+    [(Burger2D, {"datapath": "ref/burgers2d_3.dat", "icpath": ("ref/burgers2d_init_u_3.dat", "ref/burgers2d_init_v_3.dat")})] +
+    [(Burger2D, {"datapath": "ref/burgers2d_4.dat", "icpath": ("ref/burgers2d_init_u_4.dat", "ref/burgers2d_init_v_4.dat")})] +
+    [(PoissonClassic, {"scale": 2})] +
+    [(PoissonClassic, {"scale": 4})] +
+    [(PoissonClassic, {"scale": 8})] +
+    [(PoissonClassic, {"scale": 16})] +
+    [(HeatMultiscale, {"init_coef": (5 * np.pi, np.pi)})] + 
+    [(HeatMultiscale, {"init_coef": (10 * np.pi, np.pi)})] +
+    [(HeatMultiscale, {"init_coef": (40 * np.pi, np.pi)})] +
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a2.dat", "a": 2})] + 
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a8.dat", "a": 8})] + 
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a16.dat", "a": 16})] + 
+    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a32.dat", "a": 32})] + 
+    [(WaveEquation1D, {"a": 2})] + 
+    [(WaveEquation1D, {"a": 6})] + 
+    [(WaveEquation1D, {"a": 8})] + 
+    [(WaveEquation1D, {"a": 10})] + 
+    [(HeatND, {"dim": 4})] +
+    [(HeatND, {"dim": 6})] +
+    [(HeatND, {"dim": 8})] +
+    [(HeatND, {"dim": 10})]
+)
 
-for pde_class in pde_list:
+for pde_config in pde_list:
 
     def get_model_dde():
-        pde = pde_class()
+        if isinstance(pde_config, tuple):
+            pde = pde_config[0](**pde_config[1])
+        else:
+            pde = pde_config()
+        
         # pde.training_points()
         # pde.use_gepinn()
 

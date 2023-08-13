@@ -10,7 +10,7 @@ from ..utils.func_cache import cache_tensor
 
 class WaveEquation1D(baseclass.BasePDE):
 
-    def __init__(self, C=2, bbox=[0, 1, 0, 1], scale=1):
+    def __init__(self, C=2, bbox=[0, 1, 0, 1], scale=1, a=4):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -30,7 +30,7 @@ class WaveEquation1D(baseclass.BasePDE):
 
         def ref_sol(x):
             x = x / scale
-            return (np.sin(np.pi * x[:, 0:1]) * np.cos(2 * np.pi * x[:, 1:2]) + 0.5 * np.sin(4 * np.pi * x[:, 0:1]) * np.cos(8 * np.pi * x[:, 1:2]))
+            return (np.sin(np.pi * x[:, 0:1]) * np.cos(2 * np.pi * x[:, 1:2]) + 0.5 * np.sin(a * np.pi * x[:, 0:1]) * np.cos(2 * a * np.pi * x[:, 1:2]))
 
         self.ref_sol = ref_sol
 
