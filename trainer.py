@@ -32,6 +32,7 @@ class HookedStdout:
 def train_process(data, save_path, device, seed):
     hooked = HookedStdout(f"{save_path}/log.txt")
     sys.stdout = hooked
+    sys.stderr = HookedStdout(f"{save_path}/logerr.txt", sys.stderr)
 
     import torch
     import deepxde as dde
@@ -89,6 +90,7 @@ class Trainer:
 
                 hooked = HookedStdout(f"{save_path}/log.txt")
                 sys.stdout = hooked
+                sys.stderr = HookedStdout(f"{save_path}/logerr.txt", sys.stderr)
                 dde.config.set_random_seed(seed)
 
                 print(f"***** Begin #{i}-{j} *****")
