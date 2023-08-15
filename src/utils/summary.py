@@ -43,7 +43,7 @@ def extract_name(path):
 
 def extract_success(lines):
     # example: Epoch 20000: saving model to runs/08.10-05.59.14-LBFGS_MainExp/0-0/20000.pt ...
-    flags = (False, False)
+    flags = [False, False]
     for line in lines:
         line = line.strip()
         if line.startswith("Epoch 20000:"):
