@@ -20,6 +20,10 @@ def rar_wrapper(pde, model, conf):
             X = model.train_state.X_train
             f = model.predict(X, operator=pde.pde)
             err = np.abs(f).squeeze()
+            if err.ndim == 2: 
+                err = np.sum(err, axis=0)
+            elif err.ndim > 2:
+                raise ValueError("RAR: Error occured when calculate pde residue: err.ndim > 2")
             mean_err = np.mean(err)
             print(f'mean residual: {mean_err}')
 
