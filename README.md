@@ -8,11 +8,12 @@ Our NIPS paper is currently under review. We will provide more detailed guide so
 ## Installation
 
 ```shell
-
 pip install -r requirements.txt
 ```
 
 ## Usage
+
+[📄 Full Documention](https://pinnacle-docs.vercel.app/)
 
 Run all 22 cases with default settings:
 
@@ -20,13 +21,13 @@ Run all 22 cases with default settings:
 python benchmark.py [--name EXP_NAME] [--seed SEED] [--device DEVICE]
 ```
 
-Please read the comments in `benchmark.py` to modify the experiment configuration and apply different methods.
+<!-- Please read the comments in `benchmark.py` to modify the experiment configuration and apply different methods.
 
 We are actively iterating the CLI design to make it easy to use.
 
 ### Multi-GPU Training
 
-One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel.
+One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel. -->
 
 ## Citation
 

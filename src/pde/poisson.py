@@ -285,7 +285,7 @@ class Poisson3D(baseclass.BasePDE):
         self.load_ref_data(datapath)
 
         # BCs
-        self.add_bcs([{'component': 0, 'function': (lambda x: 0), 'bc': (lambda _,on_boundary:on_boundary), 'type': 'neumann'}])
+        self.add_bcs([{'component': 0, 'function': (lambda x: 0), 'bc': (lambda _, on_boundary: on_boundary), 'type': 'neumann'}])
 
         # Training Config
         self.training_points(mul=4)
