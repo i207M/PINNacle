@@ -8,8 +8,7 @@ Our NIPS paper is currently under review. We will provide more detailed guide so
 ## Installation
 
 ```shell
-# install torch manually
-# install other dependencies
+
 pip install -r requirements.txt
 ```
 
