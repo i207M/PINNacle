@@ -41,17 +41,30 @@ def extract_name(path):
     print("\033[33mWarning:Could not find PDE Class Name.\033[0m")  # yellow
     return ""
 
+def extract_success(lines):
+    # example: Epoch 20000: saving model to runs/08.10-05.59.14-LBFGS_MainExp/0-0/20000.pt ...
+    flags = [False, False]
+    for line in lines:
+        line = line.strip()
+        if line.startswith("Epoch 20000:"):
+            flags[0]=True
+        elif line.startswith("'train'"):
+            flags[1]=True
+    return 1 if flags[0] and flags[1] else 0
+
 def summary(path, tasknum, repeat, iters):
-    columns = ['pde', 'iter', 'run_time', 'run_time_std', 'train_loss', 'train_loss_std', \
+    columns = ['pde', 'iter', 'success_rate', 'run_time', 'run_time_std', 'train_loss', 'train_loss_std', \
                'mse', 'mse_std', 'mxe', 'mxe_std', 'l2rel', 'l2rel_std', 'crmse', 'crmse_std', \
                'frmse_low', 'frmse_low_std', 'frmse_mid', 'frmse_mid_std', 'frmse_high', 'frmse_high_std']
     result = []
     for i in range(tasknum):
         name = extract_name('{}/{}-0/log.txt'.format(path, i))
         try:
+            success_mean, success_std = _process(extract_success, '{}/{}-{{}}/log.txt'.format(path, i), repeat)
             run_time_mean, run_time_std = _process(extract_time, '{}/{}-{{}}/log.txt'.format(path, i), repeat)
             train_loss_mean, train_loss_std = _process(lambda data: data[-1, 1], '{}/{}-{{}}/loss.txt'.format(path, i), repeat)
         except (FileNotFoundError, IOError):
+            success_mean = np.nan
             run_time_mean = run_time_std = np.nan
             train_loss_mean = train_loss_std = np.nan
         try:
@@ -67,7 +80,7 @@ def summary(path, tasknum, repeat, iters):
             l2rel_mean = l2rel_std = crmse_mean = crmse_std = np.nan
             flow_mean = flow_std = fmid_mean = fmid_std = np.nan
             fhigh_mean = fhigh_std = np.nan
-        result.append([name, iters[i], run_time_mean, run_time_std, train_loss_mean, train_loss_std, mse_mean, mse_std, \
+        result.append([name, iters[i], success_mean, run_time_mean, run_time_std, train_loss_mean, train_loss_std, mse_mean, mse_std, \
                        mxe_mean, mxe_std, l2rel_mean, l2rel_std, crmse_mean, crmse_std, \
                        flow_mean, flow_std, fmid_mean, fmid_std, fhigh_mean, fhigh_std])
 

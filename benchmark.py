@@ -15,6 +15,7 @@ parser.add_argument('--iter', type=int, default=20000)
 parser.add_argument('--log-every', type=int, default=100)
 parser.add_argument('--plot-every', type=int, default=2000)
 parser.add_argument('--repeat', type=int, default=1)
+parser.add_argument('--method', type=str, default="adam")
 
 command_args = parser.parse_args()
 
@@ -34,6 +35,7 @@ from src.pde.poisson import PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poiss
 from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
 from src.utils.args import parse_hidden_layers, parse_loss_weight
 from src.utils.callbacks import TesterCallback, PlotCallback, LossCallback
+from src.utils.rar import rar_wrapper
 
 # It is recommended not to modify this example file.
 # Please copy it as benchmark_xxx.py and make changes according to your own ideas.
@@ -78,9 +80,14 @@ for pde_config in pde_list:
             pde = pde_config()
         
         # pde.training_points()
-        # pde.use_gepinn()
+        if command_args.method == "gepinn":
+            pde.use_gepinn()
 
         net = dde.nn.FNN([pde.input_dim] + parse_hidden_layers(command_args) + [pde.output_dim], "tanh", "Glorot normal")
+        if command_args.method == "laaf":
+            net = DNN_LAAF(len(parse_hidden_layers(command_args))-1, parse_hidden_layers[0], pde.input_dim, pde.output_dim)
+        elif command_args.method == "gaaf":
+            net = DNN_GAAF(len(parse_hidden_layers(command_args))-1, parse_hidden_layers[0], pde.input_dim, pde.output_dim)
         net = net.float()
 
         loss_weights = parse_loss_weight(command_args)
@@ -89,10 +96,19 @@ for pde_config in pde_list:
         else:
             loss_weights = np.array(loss_weights)
         opt = torch.optim.Adam(net.parameters(), command_args.lr)
-        # opt = MultiAdam(net.parameters(), lr=1e-3, betas=(0.99, 0.99), loss_group_idx=[pde.num_pde])
+        if command_args.method == "multiadam":
+            opt = MultiAdam(net.parameters(), lr=1e-3, betas=(0.99, 0.99), loss_group_idx=[pde.num_pde])
+        elif command_args.method == "lra":
+            opt = LR_Adaptor(opt, loss_weights, pde.num_pde)
+        elif command_args.method == "ntk":
+            opt = LR_Adaptor_NTK(opt, loss_weights, pde)
+        elif command_args.method == "lbfgs":
+            opt = Adam_LBFGS(net.parameters(), switch_epoch=5000, adam_param={'lr':command_args.lr})
 
         model = pde.create_model(net)
         model.compile(opt, loss_weights=loss_weights)
+        if command_args.method == "rar":
+            model.train = rar_wrapper(pde, model, {"interval": 1000, "count": 1})
         # the trainer calls model.train(**train_args)
         return model
 
