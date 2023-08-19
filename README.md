@@ -28,7 +28,7 @@ This benchmark paper implements the following variants and create a new challeng
 See these references for more details,
 
 - [Physics-informed neural networks: A deep learning framework for solving forward and inverse problems involving nonlinear partial differential equations](https://www.sciencedirect.com/science/article/abs/pii/S0021999118307125)
-- [Understanding and mitigating gradient pathologies in physics-informed neural networks](Understanding and mitigating gradient pathologies in physics-informed neural networks)
+- [Understanding and mitigating gradient pathologies in physics-informed neural networks](https://arxiv.org/abs/2001.04536)
 - [When and why PINNs fail to train: A neural tangent kernel perspective](https://arxiv.org/abs/2007.14527)
 - [A comprehensive study of non-adaptive and residual-based adaptive sampling for physics-informed neural networks](https://arxiv.org/abs/2207.10289)
 - [MultiAdam: Parameter-wise Scale-invariant Optimizer for Multiscale Training of Physics-informed Neural Networks](https://arxiv.org/abs/2306.02816)
