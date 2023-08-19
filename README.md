@@ -6,6 +6,7 @@ This repository is our codebase for [PINNacle: A Comprehensive Benchmark of Phys
   <img width="80%" src="https://raw.githubusercontent.com/i207M/PINNacle/master/resources/pinnacle.png"/>
 </p>
 
+
 ### Implemented Methods
 
 This benchmark paper implements the following variants and create a new challenging dataset to compare them,
@@ -78,11 +79,18 @@ If you find out work useful, please cite our paper at:
   journal={arXiv preprint arXiv:2306.08827},
   year={2023}
 }
+```
 
+We also suggest you to have a look at the survey paper ([Physics-Informed Machine Learning: A Survey on Problems, Methods and Applications](https://arxiv.org/abs/2211.08064)) about PINNs, neural operators, and other paradigms of PIML.
+```
 @article{hao2022physics,
   title={Physics-informed machine learning: A survey on problems, methods and applications},
   author={Hao, Zhongkai and Liu, Songming and Zhang, Yichi and Ying, Chengyang and Feng, Yao and Su, Hang and Zhu, Jun},
   journal={arXiv preprint arXiv:2211.08064},
   year={2022}
 }
+}
 ```
+
+
+
