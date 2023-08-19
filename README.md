@@ -3,7 +3,7 @@
 This repository is our codebase for [PINNacle: A Comprehensive Benchmark of Physics-Informed Neural Networks for Solving PDEs](https://arxiv.org/abs/2306.08827). Our paper is currently under review. We will provide more detailed guide soon.
 
 <p align="center">
-  <img width="60%" src="https://raw.githubusercontent.com/i207M/PINNacle/master/resources/pinnacle.png"/>
+  <img width="80%" src="https://raw.githubusercontent.com/i207M/PINNacle/master/resources/pinnacle.png"/>
 </p>
 
 ### Implemented Methods
@@ -63,9 +63,7 @@ We are actively iterating the CLI design to make it easy to use.
 
 ### Multi-GPU Training
 
-One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel. 
-
-
+One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel. -->
 
 
 
