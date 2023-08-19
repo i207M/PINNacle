@@ -81,14 +81,13 @@ If you find out work useful, please cite our paper at:
 }
 ```
 
-We also suggest you to have a look at the survey paper ([Physics-Informed Machine Learning: A Survey on Problems, Methods and Applications](https://arxiv.org/abs/2211.08064)) about PINNs, neural operators, and other paradigms of PIML.
+We also suggest you have a look at the survey paper ([Physics-Informed Machine Learning: A Survey on Problems, Methods and Applications](https://arxiv.org/abs/2211.08064)) about PINNs, neural operators, and other paradigms of PIML.
 ```
 @article{hao2022physics,
   title={Physics-informed machine learning: A survey on problems, methods and applications},
   author={Hao, Zhongkai and Liu, Songming and Zhang, Yichi and Ying, Chengyang and Feng, Yao and Su, Hang and Zhu, Jun},
   journal={arXiv preprint arXiv:2211.08064},
   year={2022}
-}
 }
 ```
 
