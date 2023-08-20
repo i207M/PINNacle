@@ -6,7 +6,7 @@ from trainer import Trainer
 os.environ["DDEBACKEND"] = "pytorch"
 parser = argparse.ArgumentParser(description='PINNBench trainer')
 parser.add_argument('--name', type=str, default="benchmark")
-parser.add_argument('--device', type=str, default="0") # set to "cpu" enables cpu training 
+parser.add_argument('--device', type=str, default="0")  # set to "cpu" enables cpu training 
 parser.add_argument('--seed', type=int, default=None)
 parser.add_argument('--hidden-layers', type=str, default="100*5")
 parser.add_argument('--loss-weight', type=str, default="")
@@ -27,12 +27,13 @@ import torch
 import deepxde as dde
 from src.model.laaf import DNN_GAAF, DNN_LAAF
 from src.optimizer import MultiAdam, LR_Adaptor, LR_Adaptor_NTK, Adam_LBFGS
-from src.pde.burger import Burger1D, Burger2D
+from src.pde.burgers import Burgers1D, Burgers2D
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
-from src.pde.heat import HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime, HeatND
-from src.pde.ns import NSEquation_Classic, NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long
-from src.pde.poisson import PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea, PoissonND
-from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
+from src.pde.heat import Heat2D_VaryingCoef, Heat2D_Multiscale, Heat2D_ComplexGeometry, Heat2D_LongTime, HeatND
+from src.pde.ns import NS2D_LidDriven, NS2D_BackStep, NS2D_LongTime
+from src.pde.poisson import Poisson2D_Classic, PoissonBoltzmann2D, Poisson3D_ComplexGeometry, Poisson2D_ManyArea, PoissonND
+from src.pde.wave import Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime
+from src.pde.inverse import PoissonInv, HeatInv
 from src.utils.args import parse_hidden_layers, parse_loss_weight
 from src.utils.callbacks import TesterCallback, PlotCallback, LossCallback
 from src.utils.rar import rar_wrapper
@@ -40,36 +41,38 @@ from src.utils.rar import rar_wrapper
 # It is recommended not to modify this example file.
 # Please copy it as benchmark_xxx.py and make changes according to your own ideas.
 pde_list = \
-    [Burger1D, Burger2D] + \
-    [PoissonClassic, PoissonBoltzmann2D, Poisson3D, Poisson2DManyArea] + \
-    [HeatDarcy, HeatMultiscale, HeatComplex, HeatLongTime] + \
-    [NSEquation_LidDriven, NSEquation_BackStep, NSEquation_Long] + \
-    [WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long] + \
+    [Burgers1D, Burgers2D] + \
+    [Poisson2D_Classic, PoissonBoltzmann2D, Poisson3D_ComplexGeometry, Poisson2D_ManyArea] + \
+    [Heat2D_VaryingCoef, Heat2D_Multiscale, Heat2D_ComplexGeometry, Heat2D_LongTime] + \
+    [NS2D_LidDriven, NS2D_BackStep, NS2D_LongTime] + \
+    [Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime] + \
     [KuramotoSivashinskyEquation, GrayScottEquation] + \
-    [PoissonND, HeatND] + \
-    [(Burger2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] + \
-    [(Burger2D, {"datapath": "ref/burgers2d_2.dat", "icpath": ("ref/burgers2d_init_u_2.dat", "ref/burgers2d_init_v_2.dat")})] + \
-    [(Burger2D, {"datapath": "ref/burgers2d_3.dat", "icpath": ("ref/burgers2d_init_u_3.dat", "ref/burgers2d_init_v_3.dat")})] + \
-    [(Burger2D, {"datapath": "ref/burgers2d_4.dat", "icpath": ("ref/burgers2d_init_u_4.dat", "ref/burgers2d_init_v_4.dat")})] + \
-    [(PoissonClassic, {"scale": 2})] + \
-    [(PoissonClassic, {"scale": 4})] + \
-    [(PoissonClassic, {"scale": 8})] + \
-    [(PoissonClassic, {"scale": 16})] + \
-    [(HeatMultiscale, {"init_coef": (5 * np.pi, np.pi)})] + \
-    [(HeatMultiscale, {"init_coef": (10 * np.pi, np.pi)})] + \
-    [(HeatMultiscale, {"init_coef": (40 * np.pi, np.pi)})] + \
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a2.dat", "a": 2})] + \
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a8.dat", "a": 8})] + \
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a16.dat", "a": 16})] + \
-    [(NSEquation_LidDriven, {"datapath": "ref/lid_driven_a32.dat", "a": 32})] + \
-    [(WaveEquation1D, {"a": 2})] + \
-    [(WaveEquation1D, {"a": 6})] + \
-    [(WaveEquation1D, {"a": 8})] + \
-    [(WaveEquation1D, {"a": 10})] + \
-    [(HeatND, {"dim": 4})] + \
-    [(HeatND, {"dim": 6})] + \
-    [(HeatND, {"dim": 8})] + \
-    [(HeatND, {"dim": 10})]
+    [PoissonND, HeatND]
+
+# pde_list += \
+#     [(Burgers2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] + \
+#     [(Burgers2D, {"datapath": "ref/burgers2d_2.dat", "icpath": ("ref/burgers2d_init_u_2.dat", "ref/burgers2d_init_v_2.dat")})] + \
+#     [(Burgers2D, {"datapath": "ref/burgers2d_3.dat", "icpath": ("ref/burgers2d_init_u_3.dat", "ref/burgers2d_init_v_3.dat")})] + \
+#     [(Burgers2D, {"datapath": "ref/burgers2d_4.dat", "icpath": ("ref/burgers2d_init_u_4.dat", "ref/burgers2d_init_v_4.dat")})] + \
+#     [(Poisson2D_Classic, {"scale": 2})] + \
+#     [(Poisson2D_Classic, {"scale": 4})] + \
+#     [(Poisson2D_Classic, {"scale": 8})] + \
+#     [(Poisson2D_Classic, {"scale": 16})] + \
+#     [(Heat2D_Multiscale, {"init_coef": (5 * np.pi, np.pi)})] + \
+#     [(Heat2D_Multiscale, {"init_coef": (10 * np.pi, np.pi)})] + \
+#     [(Heat2D_Multiscale, {"init_coef": (40 * np.pi, np.pi)})] + \
+#     [(NS2D_LidDriven, {"datapath": "ref/lid_driven_a2.dat", "a": 2})] + \
+#     [(NS2D_LidDriven, {"datapath": "ref/lid_driven_a8.dat", "a": 8})] + \
+#     [(NS2D_LidDriven, {"datapath": "ref/lid_driven_a16.dat", "a": 16})] + \
+#     [(NS2D_LidDriven, {"datapath": "ref/lid_driven_a32.dat", "a": 32})] + \
+#     [(Wave1D, {"a": 2})] + \
+#     [(Wave1D, {"a": 6})] + \
+#     [(Wave1D, {"a": 8})] + \
+#     [(Wave1D, {"a": 10})] + \
+#     [(HeatND, {"dim": 4})] + \
+#     [(HeatND, {"dim": 6})] + \
+#     [(HeatND, {"dim": 8})] + \
+#     [(HeatND, {"dim": 10})]
 
 for pde_config in pde_list:
 

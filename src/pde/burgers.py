@@ -5,7 +5,7 @@ import scipy
 from . import baseclass
 
 
-class Burger1D(baseclass.BaseTimePDE):
+class Burgers1D(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/burgers1d.dat", geom=[-1, 1], time=[0, 1], nu=0.01 / np.pi):
         super().__init__()
@@ -50,7 +50,7 @@ class Burger1D(baseclass.BaseTimePDE):
         self.training_points()  # default
 
 
-class Burger2D(baseclass.BaseTimePDE):
+class Burgers2D(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/burgers2d_0.dat", icpath=("ref/burgers2d_init_u_0.dat", "ref/burgers2d_init_v_0.dat"), nu=0.001, L=4, T=1):
         super().__init__()

@@ -8,7 +8,7 @@ from ..utils.random import generate_darcy_2d_coef
 from ..utils.func_cache import cache_tensor
 
 
-class WaveEquation1D(baseclass.BasePDE):
+class Wave1D(baseclass.BasePDE):
 
     def __init__(self, C=2, bbox=[0, 1, 0, 1], scale=1, a=4):
         super().__init__()
@@ -61,7 +61,7 @@ class WaveEquation1D(baseclass.BasePDE):
         self.training_points()
 
 
-class WaveHeterogeneous(baseclass.BasePDE):
+class Wave2D_Heterogeneous(baseclass.BasePDE):
 
     def __init__(self, datapath="ref/wave_darcy.dat", bbox=[-1, 1, -1, 1, 0, 5], mu=(-0.5, 0), sigma=0.3):
         super().__init__()
@@ -124,7 +124,7 @@ class WaveHeterogeneous(baseclass.BasePDE):
         self.training_points(mul=4)
 
 
-class WaveEquation2D_Long(baseclass.BaseTimePDE):
+class Wave2D_LongTime(baseclass.BaseTimePDE):
 
     def __init__(self, bbox=[0, 1, 0, 1, 0, 100], a=np.sqrt(2), m1=1, m2=3, n1=1, n2=2, p1=1, p2=1):
         super().__init__()

@@ -5,7 +5,7 @@ import deepxde as dde
 from . import baseclass
 
 
-class NSEquation_Classic(baseclass.BasePDE):
+class NS2D_Classic(baseclass.BasePDE):
 
     def __init__(self, datapath="ref/ns2d.dat", nu=1, bbox=[0, 8, 0, 8], circles=[[6, 6, 1.0], [2, 1.0, 0.5]], linear=False):
         # bbox: left(x[0]) right(x[0]) bottom(x[1]) top(x[1])
@@ -83,7 +83,7 @@ class NSEquation_Classic(baseclass.BasePDE):
         def boundary_circle(x, on_boundary):
             return on_boundary and (not rec.on_boundary(x))
 
-        def u_func(x):  # 边界流速初值
+        def u_func(x):
             return x[:, 1:2] * (bbox[3] - x[:, 1:2]) / (2 * bbox[3])
 
         self.add_bcs([{
@@ -127,7 +127,7 @@ class NSEquation_Classic(baseclass.BasePDE):
         self.training_points()
 
 
-class NSEquation_LidDriven(baseclass.BasePDE):
+class NS2D_LidDriven(baseclass.BasePDE):
 
     def __init__(self, datapath="ref/lid_driven_a4.dat", a=4, nu=1 / 100, bbox=[0, 1, 0, 1]):
         super().__init__()
@@ -202,7 +202,7 @@ class NSEquation_LidDriven(baseclass.BasePDE):
         self.training_points()
 
 
-class NSEquation_BackStep(baseclass.BasePDE):
+class NS2D_BackStep(baseclass.BasePDE):
 
     def __init__(
         self,
@@ -224,6 +224,7 @@ class NSEquation_BackStep(baseclass.BasePDE):
         self.geom = dde.geometry.Rectangle(xmin=[bbox[0], bbox[2]], xmax=[bbox[1], bbox[3]])
         rec = dde.geometry.Rectangle(xmin=[bbox[0] - eps, bbox[3] / 2], xmax=[bbox[1] / 2, bbox[3] + eps])
         self.geom = dde.geometry.csg.CSGDifference(self.geom, rec)
+
         # TODO: use CSGMultiDifference
         for name, configs in obstacle.items():
             if name == 'circ':
@@ -272,7 +273,7 @@ class NSEquation_BackStep(baseclass.BasePDE):
         def boundary_other(x, on_boundary):
             return on_boundary and not (boundary_in(x, on_boundary) or boundary_out(x, on_boundary))
 
-        def u_func(x):  # 边界流速初值
+        def u_func(x):
             return x[:, 1:2] * (1 - x[:, 1:2]) * 4
 
         self.add_bcs([{
@@ -306,7 +307,7 @@ class NSEquation_BackStep(baseclass.BasePDE):
         self.training_points()
 
 
-class NSEquation_Long(baseclass.BaseTimePDE):
+class NS2D_LongTime(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/ns_long.dat", nu=1 / 100, bbox=[0, 2, 0, 1, 0, 5]):
         super().__init__()
@@ -365,7 +366,7 @@ class NSEquation_Long(baseclass.BaseTimePDE):
         def boundary_other(x, on_boundary):
             return on_boundary and not (boundary_in(x, on_boundary) or boundary_out(x, on_boundary))
 
-        def u_func(x):  # 边界流速初值
+        def u_func(x):
             y, t = x[:, 1:2], x[:, 2:3]
             return np.sin(np.pi * y) * (COEF_A1 * np.sin(np.pi * t) + COEF_A2 * np.sin(3 * np.pi * t) + COEF_A3 * np.sin(5 * np.pi * t))
 

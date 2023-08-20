@@ -9,7 +9,7 @@ from ..utils.geom import CSGMultiDifference
 from ..utils.random import generate_heat_2d_coef
 
 
-class HeatDarcy(baseclass.BaseTimePDE):
+class Heat2D_VaryingCoef(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/heat_darcy.dat", bbox=[0, 1, 0, 1, 0, 5], A=200, m=(1, 5, 1)):
         super().__init__()
@@ -68,7 +68,7 @@ class HeatDarcy(baseclass.BaseTimePDE):
         self.training_points(mul=4)
 
 
-class HeatMultiscale(baseclass.BaseTimePDE):
+class Heat2D_Multiscale(baseclass.BaseTimePDE):
 
     def __init__(
         self, 
@@ -119,7 +119,7 @@ class HeatMultiscale(baseclass.BaseTimePDE):
         self.training_points(mul=4)
 
 
-class HeatComplex(baseclass.BaseTimePDE):
+class Heat2D_ComplexGeometry(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/heat_complex.dat", bbox=[-8, 8, -12, 12, 0, 3]):
         super().__init__()
@@ -195,7 +195,7 @@ class HeatComplex(baseclass.BaseTimePDE):
         self.training_points(mul=4)
 
 
-class HeatLongTime(baseclass.BaseTimePDE):
+class Heat2D_LongTime(baseclass.BaseTimePDE):
 
     def __init__(self, datapath="ref/heat_longtime.dat", bbox=[0, 1, 0, 1, 0, 100], k=1, m1=4, m2=2):
         super().__init__()

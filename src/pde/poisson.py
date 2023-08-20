@@ -5,8 +5,38 @@ import deepxde as dde
 from . import baseclass
 from ..utils.func_cache import cache_tensor
 
+class Poisson1D(baseclass.BasePDE):
 
-class PoissonClassic(baseclass.BasePDE):
+    def __init__(self, a=1):
+        super().__init__()
+        # Output Dim
+        self.output_dim = 1
+        # Domain
+        self.bbox = [0, 2 * np.pi / a]
+        self.geom = dde.geometry.Interval(*self.bbox)
+
+        # PDE
+        def f(x):
+            return a**2 * torch.sin(a * x)
+
+        def pde(x, u):
+            u_xx = dde.grad.hessian(u, x, i=0, j=0)
+            return u_xx + f(x)
+
+        self.pde = pde
+        self.set_pdeloss(num=1)
+
+        # ref_sol
+        def ref_sol(x):
+            return np.sin(a * x)
+
+        self.ref_sol = ref_sol
+
+        # bcs
+        self.add_bcs([{'component': 0, 'function': (lambda x: 0), 'bc': (lambda x, on_boundary: on_boundary), 'type': 'dirichlet'}])
+
+
+class Poisson2D_Classic(baseclass.BasePDE):
 
     def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1):
         super().__init__()
@@ -60,123 +90,6 @@ class PoissonClassic(baseclass.BasePDE):
         self.training_points()  # default
 
 
-class Poisson1D(baseclass.BasePDE):
-
-    def __init__(self, a=1):
-        super().__init__()
-        # Output Dim
-        self.output_dim = 1
-        # Domain
-        self.bbox = [0, 2 * np.pi / a]
-        self.geom = dde.geometry.Interval(*self.bbox)
-
-        # PDE
-        def f(x):
-            return a**2 * torch.sin(a * x)
-
-        def pde(x, u):
-            u_xx = dde.grad.hessian(u, x, i=0, j=0)
-            return u_xx + f(x)
-
-        self.pde = pde
-        self.set_pdeloss(num=1)
-
-        # ref_sol
-        def ref_sol(x):
-            return np.sin(a * x)
-
-        self.ref_sol = ref_sol
-
-        # bcs
-        self.add_bcs([{'component': 0, 'function': (lambda x: 0), 'bc': (lambda x, on_boundary: on_boundary), 'type': 'dirichlet'}])
-
-
-class Poisson2D(baseclass.BasePDE):
-
-    def __init__(self, width=2, height=2, c=0.1, m=1, n=1, k=10):
-        super().__init__()
-        # output dim
-        self.output_dim = 1
-        # domain
-        self.bbox = [-width / 2, width / 2, -height / 2, height / 2]
-        self.geom = dde.geometry.Rectangle(xmin=[-width / 2, -height / 2], xmax=[width / 2, height / 2])
-
-        # PDE
-        def pde(x, u):
-            u_xx = dde.grad.hessian(u, x, i=0, j=0)
-            u_yy = dde.grad.hessian(u, x, i=1, j=1)
-
-            def f(xy):
-                x, y = xy[:, 0:1], xy[:, 1:2]
-                part1 = 4 * torch.pi**2 * m**2 * c * torch.sin(2 * torch.pi * m * x)
-                part2 = (2 * k**2 * torch.sinh(k * x)) / (torch.cosh(k * x)**3)
-                part3 = 4 * torch.pi**2 * n**2 * (c * torch.sin(2 * torch.pi * m * x) + torch.tanh(k * x))
-                return (part1 + part2 + part3) * torch.sin(2 * torch.pi * n * y)
-
-            return [u_xx + u_yy + f(x)]
-
-        self.pde = pde
-        self.set_pdeloss(num=1)
-
-        # BCs
-        def ref_sol(xy):
-            x, y = xy[:, 0:1], xy[:, 1:2]
-            return (c * np.sin(2 * np.pi * m * x) + np.tanh(k * x)) * np.sin(2 * np.pi * n * y)
-
-        self.ref_sol = ref_sol
-
-        self.add_bcs([{
-            'component': 0,
-            'function': ref_sol,
-            'bc': (lambda _, on_boundary: on_boundary),
-            'type': 'dirichlet',
-        }])
-
-        # Training Setting
-        self.training_points()  # default
-
-
-class Poisson2DSimple(baseclass.BasePDE):
-
-    def __init__(self, scale=1, freq=10):
-        super().__init__()
-        # output dim
-        self.output_dim = 1
-        # domain
-        self.bbox = [-scale / 2, scale / 2, -scale / 2, scale / 2]
-        self.geom = dde.geometry.Rectangle(xmin=[-scale / 2, -scale / 2], xmax=[scale / 2, scale / 2])
-
-        # PDE
-        def pde(x, u):
-            u_xx = dde.grad.hessian(u, x, i=0, j=0)
-            u_yy = dde.grad.hessian(u, x, i=1, j=1)
-
-            def f(xy):
-                x, y = xy[:, 0:1], xy[:, 1:2]
-                return -(freq * np.pi / scale) ** 2 * \
-                        (torch.sin(freq * np.pi * x / scale) + torch.sin(freq * np.pi * y / scale))
-
-            return u_xx + u_yy - f(x)
-
-        self.pde = pde
-        self.set_pdeloss(num=1)
-
-        # BCs
-        def ref_sol(xy):
-            x, y = xy[:, 0:1], xy[:, 1:2]
-            return np.sin(freq * np.pi * x / scale) + np.sin(freq * np.pi * y / scale)
-
-        self.ref_sol = ref_sol
-
-        self.add_bcs([{
-            'component': 0,
-            'function': ref_sol,
-            'bc': (lambda _, on_boundary: on_boundary),
-            'type': 'dirichlet',
-        }])
-
-        # Training Setting
-        self.training_points()  # default
 
 
 class PoissonBoltzmann2D(baseclass.BasePDE):
@@ -237,7 +150,7 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
         self.training_points()
 
 
-class Poisson3D(baseclass.BasePDE):
+class Poisson3D_ComplexGeometry(baseclass.BasePDE):
 
     def __init__(
         self,
@@ -291,7 +204,7 @@ class Poisson3D(baseclass.BasePDE):
         self.training_points(mul=4)
 
 
-class Poisson2DManyArea(baseclass.BasePDE):
+class Poisson2D_ManyArea(baseclass.BasePDE):
 
     def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2):
         super().__init__()

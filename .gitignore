@@ -1,9 +1,9 @@
-runs/*
-temp.*
+*.png
+*.txt
+runs/
 benchmark_*.py
 example_*.py
-*.txt
-*.png
+temp.*
 
 __pycache__/
 *.py[cod]
