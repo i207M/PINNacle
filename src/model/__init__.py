@@ -1,2 +1,2 @@
 from .fnn import FNN
-from .hard_constrain import hard_constrain_wrapper
+from .hard_constraint import hard_constraint_wrapper
