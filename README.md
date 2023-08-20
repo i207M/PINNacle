@@ -45,6 +45,8 @@ See these references for more details,
 ## Installation
 
 ```shell
+git clone https://github.com/i207M/PINNacle.git --depth 1
+cd PINNacle
 pip install -r requirements.txt
 ```
 
@@ -52,7 +54,7 @@ pip install -r requirements.txt
 
 [📄 Full Documention](https://pinnacle-docs.vercel.app/)
 
-Run all 22 cases with default settings:
+Run all 20 cases with default settings:
 
 ```shell
 python benchmark.py [--name EXP_NAME] [--seed SEED] [--device DEVICE]
@@ -88,6 +90,3 @@ We also suggest you have a look at the survey paper ([Physics-Informed Machine L
   year={2022}
 }
 ```
-
-
-

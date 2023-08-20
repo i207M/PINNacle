@@ -5,3 +5,4 @@ pandas
 scikit-learn
 scikit-optimize
 scipy
+torch
