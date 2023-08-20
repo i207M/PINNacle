@@ -1,5 +1,5 @@
 #!/usr/bin/env python
-#-*- coding:utf-8 _*-
+# -*- coding:utf-8 _*-
 import numpy as np
 import matplotlib.pyplot as plt
 import scipy
@@ -13,7 +13,7 @@ pi = np.pi
 
 def seed_everything(seed=1234):
     random.seed(seed)
-    os.environ['PYTHONHASHSEED'] = str(seed)
+    os.environ["PYTHONHASHSEED"] = str(seed)
     np.random.seed(seed)
     torch.manual_seed(seed)
     torch.cuda.manual_seed(seed)
@@ -21,7 +21,6 @@ def seed_everything(seed=1234):
 
 
 def generate_grid2d(x_range, y_range, N_x=50, N_y=50, grid_on=False):
-
     x = np.linspace(x_range[0], x_range[1], N_x)
     y = np.linspace(y_range[0], y_range[1], N_y)
 
@@ -64,7 +63,7 @@ def generate_burgers_2d_source_functions():
     data_u = np.stack([data_xx, data_yy, data_u]).T
     data_v = np.stack([data_xx, data_yy, data_v]).T
 
-    np.savetxt('./burgers2d_init_u.txt', data_u)
+    np.savetxt("./burgers2d_init_u.txt", data_u)
     np.savetxt("./burgers2d_init_v.txt", data_v)
 
     plt.figure()
@@ -75,64 +74,64 @@ def generate_burgers_2d_source_functions():
 
 
 def fftind(size):
-    """ Returns a numpy array of shifted Fourier coordinates k_x k_y.
+    """Returns a numpy array of shifted Fourier coordinates k_x k_y.
 
-        Input args:
-            size (integer): The size of the coordinate array to create
-        Returns:
-            k_ind, numpy array of shape (2, size, size) with:
-                k_ind[0,:,:]:  k_x components
-                k_ind[1,:,:]:  k_y components
+    Input args:
+        size (integer): The size of the coordinate array to create
+    Returns:
+        k_ind, numpy array of shape (2, size, size) with:
+            k_ind[0,:,:]:  k_x components
+            k_ind[1,:,:]:  k_y components
 
-        Example:
+    Example:
 
-            print(fftind(5))
+        print(fftind(5))
 
-            [[[ 0  1 -3 -2 -1]
-            [ 0  1 -3 -2 -1]
-            [ 0  1 -3 -2 -1]
-            [ 0  1 -3 -2 -1]
-            [ 0  1 -3 -2 -1]]
-            [[ 0  0  0  0  0]
-            [ 1  1  1  1  1]
-            [-3 -3 -3 -3 -3]
-            [-2 -2 -2 -2 -2]
-            [-1 -1 -1 -1 -1]]]
+        [[[ 0  1 -3 -2 -1]
+        [ 0  1 -3 -2 -1]
+        [ 0  1 -3 -2 -1]
+        [ 0  1 -3 -2 -1]
+        [ 0  1 -3 -2 -1]]
+        [[ 0  0  0  0  0]
+        [ 1  1  1  1  1]
+        [-3 -3 -3 -3 -3]
+        [-2 -2 -2 -2 -2]
+        [-1 -1 -1 -1 -1]]]
 
-        """
+    """
     k_ind = np.mgrid[:size, :size] - int((size + 1) / 2)
     k_ind = scipy.fft.fftshift(k_ind)
-    return (k_ind)
+    return k_ind
 
 
 def gaussian_random_field(alpha=3.0, size=128, flag_normalize=True):
-    """ Returns a numpy array of shifted Fourier coordinates k_x k_y.
+    """Returns a numpy array of shifted Fourier coordinates k_x k_y.
 
-        Input args:
-            alpha (double, default = 3.0):
-                The power of the power-law momentum distribution
-            size (integer, default = 128):
-                The size of the square output Gaussian Random Fields
-            flag_normalize (boolean, default = True):
-                Normalizes the Gaussian Field:
-                    - to have an average of 0.0
-                    - to have a standard deviation of 1.0
-        Returns:
-            gfield (numpy array of shape (size, size)):
-                The random gaussian random field
+    Input args:
+        alpha (double, default = 3.0):
+            The power of the power-law momentum distribution
+        size (integer, default = 128):
+            The size of the square output Gaussian Random Fields
+        flag_normalize (boolean, default = True):
+            Normalizes the Gaussian Field:
+                - to have an average of 0.0
+                - to have a standard deviation of 1.0
+    Returns:
+        gfield (numpy array of shape (size, size)):
+            The random gaussian random field
 
-        Example:
-        import matplotlib
-        import matplotlib.pyplot as plt
-        example = gaussian_random_field()
-        plt.imshow(example)
-        """
+    Example:
+    import matplotlib
+    import matplotlib.pyplot as plt
+    example = gaussian_random_field()
+    plt.imshow(example)
+    """
 
     # Defines momentum indices
     k_idx = fftind(size)
 
     # Defines the amplitude as a power law 1/|k|^(alpha/2)
-    amplitude = np.power(k_idx[0]**2 + k_idx[1]**2 + 1e-10, -alpha / 4.0)
+    amplitude = np.power(k_idx[0] ** 2 + k_idx[1] ** 2 + 1e-10, -alpha / 4.0)
     amplitude[0, 0] = 0
 
     # Draws a complex gaussian random noise with normal
@@ -179,7 +178,7 @@ def generate_darcy_2d_coef():
     darcy_2d_data, xx, yy = phinorm_a.reshape(-1), xx.reshape(-1), yy.reshape(-1)
     darcy_2d_data = np.stack([xx, yy, darcy_2d_data]).T
 
-    np.savetxt('./darcy_2d_coef_256.txt', darcy_2d_data)
+    np.savetxt("./darcy_2d_coef_256.txt", darcy_2d_data)
     plt.figure()
     plt.imshow(phinorm_a)
     plt.colorbar()
@@ -203,7 +202,7 @@ def generate_heat_2d_coef():
     darcy_2d_data, xx, yy = phinorm_a.reshape(-1), xx.reshape(-1), yy.reshape(-1)
     darcy_2d_data = np.stack([xx, yy, darcy_2d_data]).T
 
-    np.savetxt('./heat_2d_coef_256.txt', darcy_2d_data)
+    np.savetxt("./heat_2d_coef_256.txt", darcy_2d_data)
     plt.figure()
     plt.imshow(phinorm_a)
     plt.colorbar()
@@ -212,7 +211,6 @@ def generate_heat_2d_coef():
 
 
 if __name__ == "__main__":
-
     seed_everything(20220722)
 
     # generate_burgers_2d_source_functions()
