@@ -13,14 +13,14 @@ This benchmark paper implements the following variants and create a new challeng
 
 | Method                                                       | Type                                         |
 | ------------------------------------------------------------ | -------------------------------------------- |
-| [PINNs](https://www.sciencedirect.com/science/article/abs/pii/S0021999118307125) | Vanilla PINNs                                |
+| [PINN](https://www.sciencedirect.com/science/article/abs/pii/S0021999118307125) | Vanilla PINNs                                |
 | PINNs(Adam+L-BFGS)                                           | Vanilla PINNs                                |
 | [PINN-LRA](https://arxiv.org/abs/2001.04536)                 | Loss reweighting                             |
 | [PINN-NTK](https://arxiv.org/abs/2007.14527)                 | Loss reweighting                             |
 | [RAR](https://arxiv.org/abs/2207.10289)                      | Collocation points resampling                |
 | [MultiAdam](https://arxiv.org/abs/2306.02816)                | New optimizer                                |
-| [gPINNs](https://arxiv.org/abs/2111.02801)                   | New loss functions (regularization terms)    |
-| [hp-VPINNs](https://arxiv.org/abs/2003.05385)                | New loss functions (variational formulation) |
+| [gPINN](https://arxiv.org/abs/2111.02801)                   | New loss functions (regularization terms)    |
+| [hp-VPINN](https://arxiv.org/abs/2003.05385)                | New loss functions (variational formulation) |
 | [LAAF](https://royalsocietypublishing.org/doi/10.1098/rspa.2020.0334) | New architecture (activation)                |
 | [GAAF](https://arxiv.org/abs/1906.01170)                     | New architecture (activation)                |
 | [FBPINN](https://arxiv.org/abs/2107.07871)                   | New architecture (domain decomposition)      |
@@ -65,8 +65,6 @@ We are actively iterating the CLI design to make it easy to use.
 ### Multi-GPU Training
 
 One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel. -->
-
-
 
 ## Citation
 
