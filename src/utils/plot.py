@@ -18,7 +18,7 @@ def mean_squared_error_outlier(y_true, y_pred):
 
 def plot_distribution_log(data, xlabel, ylabel, path, title=''):
     '''
-    plot the distribution of data with log-scale.
+    Plot the distribution of data with log-scale.
     '''
     plt.cla()
     plt.figure()
@@ -39,7 +39,7 @@ def plot_distribution_log(data, xlabel, ylabel, path, title=''):
 
 def plot_distribution(data, xlabel, ylabel, path, title=''):
     '''
-    plot the distribution of data.
+    Plot the distribution of data.
     '''
     plt.cla()
     plt.figure()

@@ -4,7 +4,7 @@ import torch
 
 class LR_Adaptor_NTK(torch.optim.Optimizer):
     """
-    PINN callback for learning rate annealing algorithm of physics-informed neural networks.
+    Callback for learning rate annealing algorithm of physics-informed neural networks.
     """
 
     def __init__(self, optimizer, loss_weight, pde):

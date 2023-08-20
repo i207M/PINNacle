@@ -60,14 +60,6 @@ Run all 20 cases with default settings:
 python benchmark.py [--name EXP_NAME] [--seed SEED] [--device DEVICE]
 ```
 
-<!-- Please read the comments in `benchmark.py` to modify the experiment configuration and apply different methods.
-
-We are actively iterating the CLI design to make it easy to use.
-
-### Multi-GPU Training
-
-One can use `--device` to specify the GPU devices to use. If more than one GPU is specified, the program will run multiple experiments in parallel. -->
-
 ## Citation
 
 If you find out work useful, please cite our paper at:

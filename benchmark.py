@@ -130,9 +130,9 @@ if __name__ == "__main__":
 
         trainer.add_task(
             get_model_dde, {
-                'iterations': command_args.iter,
+                "iterations": command_args.iter,
                 "display_every": command_args.log_every,
-                'callbacks': [
+                "callbacks": [
                     TesterCallback(log_every=command_args.log_every),
                     PlotCallback(log_every=command_args.plot_every, fast=True),
                     LossCallback(verbose=True),
@@ -140,7 +140,7 @@ if __name__ == "__main__":
             }
         )
 
-    trainer.set_repeat(command_args.repeat)
     trainer.setup(__file__, seed)
+    trainer.set_repeat(command_args.repeat)
     trainer.train_all()
     trainer.summary()

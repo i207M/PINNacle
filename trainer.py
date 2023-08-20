@@ -62,7 +62,7 @@ class Trainer:
         self.tasks.append((data, train_args))
 
     def setup(self, filename, seed):
-        os.makedirs(f"runs/{self.exp_name}")
+        os.makedirs(f"runs/{self.exp_name}", exist_ok=True)
         shutil.copy(filename, f"runs/{self.exp_name}/script.py.bak")
         json.dump({"seed": seed, "task": self.tasks}, open(f"runs/{self.exp_name}/config.json", 'w'), indent=4, default=lambda _: "...")
 
@@ -86,7 +86,7 @@ class Trainer:
             for i, (data, _) in enumerate(self.tasks):
                 seed = random.randint(0, 10**9)
                 save_path = f"runs/{self.exp_name}/{i}-{j}"
-                os.makedirs(save_path)
+                os.makedirs(save_path, exist_ok=True)
 
                 hooked = HookedStdout(f"{save_path}/log.txt")
                 sys.stdout = hooked

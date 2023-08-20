@@ -237,10 +237,9 @@ class TesterCallback(Callback):
         self.valid_epoch = 0
     
     def frmse_init(self):
-        # fourier transform errors only enables in Interval / Hypercube and their combination with Time domains ...
         pde = self.model.pde
         if not isinstance(pde.geom, Hypercube) and not isinstance(pde.geom, Interval):
-            logger.warning(f"fourier transform errors only enables in Interval / Hypercube and their combination with Time domains. \
+            logger.warning(f"Fourier transform errors are enabled only in Interval / Hypercube and their combination with Time domains. \
                            Type {type(pde.geom).__name__} is not a valid geometry and fRMSE has been disabled")
             self.fRMSE=False
             return

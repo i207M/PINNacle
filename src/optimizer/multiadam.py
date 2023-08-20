@@ -57,7 +57,7 @@ def sadam(
     beta1: float, beta2: float, lr: float, weight_decay: float, eps: float, maximize: bool, group_weights: Tensor, agg_momentum: bool,
     agg_beta1: float, agg_beta2: float
 ):
-    r"""Functional API that performs Adam algorithm computation.
+    r"""Functional API that performs MultiAdam algorithm computation.
 
     See :class:`~torch.optim.Adam` for details.
     """
