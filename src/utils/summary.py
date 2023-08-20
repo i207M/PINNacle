@@ -6,9 +6,9 @@ def _process(func, path, repeat):
     try:
         for i in range(repeat):
             data.append(func(np.loadtxt(path.format(i))))
-        data = np.array(data)[~np.isnan(data)] # exclude nan
+        data = np.array(data)[~np.isnan(data)]  # exclude nan
         return np.mean(data), np.std(data)
-    except ValueError as e: # should use method below
+    except ValueError as e:  # should use method below
         if len(data) != 0:
             print(e)
             return np.nan, np.nan
