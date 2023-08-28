@@ -324,8 +324,8 @@ class NS2D_LongTime(baseclass.BaseTimePDE):
         COEF_A2 = 1
         COEF_A3 = 1
 
-        def initial_f(x):
-            return torch.sin(np.pi * x[:, 0:1]) * torch.sin(np.pi * x[:, 1:2]) * torch.sin(np.pi * x[:, 2:3])
+        def initial_fy(x):
+            return -torch.sin(np.pi * x[:, 0:1]) * torch.sin(np.pi * x[:, 1:2]) * torch.sin(np.pi * x[:, 2:3])
 
         def ns_pde(x, u):
             u_vel, v_vel, _ = u[:, 0:1], u[:, 1:2], u[:, 2:]
@@ -345,8 +345,8 @@ class NS2D_LongTime(baseclass.BaseTimePDE):
             u_t = dde.grad.jacobian(u, x, i=0, j=2)
             v_t = dde.grad.jacobian(u, x, i=1, j=2)
 
-            momentum_x = (u_t + u_vel * u_vel_x + v_vel * u_vel_y + p_x - nu * (u_vel_xx + u_vel_yy) + initial_f(x))
-            momentum_y = (v_t + u_vel * v_vel_x + v_vel * v_vel_y + p_y - nu * (v_vel_xx + v_vel_yy) + initial_f(x))
+            momentum_x = (u_t + u_vel * u_vel_x + v_vel * u_vel_y + p_x - nu * (u_vel_xx + u_vel_yy))
+            momentum_y = (v_t + u_vel * v_vel_x + v_vel * v_vel_y + p_y - nu * (v_vel_xx + v_vel_yy) - initial_fy(x))
             continuity = u_vel_x + v_vel_y
 
             return [momentum_x, momentum_y, continuity]
