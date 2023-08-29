@@ -18,7 +18,7 @@ class Wave1D(baseclass.BasePDE):
         self.bbox = [0, scale, 0, scale]
         self.geom = dde.geometry.Rectangle(xmin=[self.bbox[0], self.bbox[2]], xmax=[self.bbox[1], self.bbox[3]])
 
-        # 定义方程
+        # define PDE
         def wave_pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_tt = dde.grad.hessian(u, x, i=1, j=1)
