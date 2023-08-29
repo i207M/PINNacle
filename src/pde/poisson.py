@@ -185,7 +185,7 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
                 x, y, z = xyz[:, 0:1], xyz[:, 1:2], xyz[:, 2:3]
                 xlen2 = x**2 + y**2 + z**2
                 part1 = torch.exp(torch.sin(m[0] * np.pi * x) + torch.sin(m[1] * np.pi * y) + torch.sin(m[2] * np.pi * z)) * (xlen2 - 1) / (xlen2 + 1)
-                part2 = torch.sin(m[0] * np.pi * x) + torch.sin(m[1] * np.pi * y) + torch.sin(m[2] * np.pi * z)
+                part2 = torch.sin(m[0] * np.pi * x) * torch.sin(m[1] * np.pi * y) * torch.sin(m[2] * np.pi * z)
                 return A[0] * part1 + A[1] * part2
 
             mus = torch.where(x[:, 2] < interface_z, mu[0], mu[1]).unsqueeze(dim=-1)
