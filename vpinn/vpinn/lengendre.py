@@ -9,11 +9,11 @@ def legendre(n, x):
         return ((2 * n - 1) * x * legendre(n - 1, x) - (n - 1) * legendre(n - 2, x)) / n
 
 def legendre_derivative(n, x):
-    # 处理 x = 1 或 -1 的特殊情况
+    # handle special cases where x = 1 or -1
     x_mask = (x == 1) | (x == -1)
     result = torch.zeros_like(x)
     
-    # 计算勒让德多项式的导数
+    # calculate the derivatives of Legendre polynomials
     if n == 0:
         return result
     elif n == 1:

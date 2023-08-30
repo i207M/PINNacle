@@ -33,7 +33,7 @@ class MLP(torch.nn.Module):
         for i in range(len(layer_sizes) - 1):
             layers.append(nn.Linear(layer_sizes[i], layer_sizes[i + 1]))
             # layers.append(torch.nn.Linear(layer_sizes[i], layer_sizes[i + 1]))
-            if i < len(layer_sizes) - 2:  # 不在最后一层时添加激活函数
+            if i < len(layer_sizes) - 2:  # add an activation function when not in the last layer
                 if type=='tanh':
                     layers.append(nn.Tanh())
                 if type=='relu':
@@ -47,11 +47,11 @@ class MLP(torch.nn.Module):
     def initialize_weights(self):
         for module in self.modules():
             if isinstance(module, nn.Linear):
-                # 使用 xavier_uniform_ 初始化
+                # use xavier_uniform_ initialization
                 # init.xavier_uniform_(module.weight)
-                # 或者，使用 xavier_normal_ 初始化
+                # or，use xavier_normal_ initialization
                 init.xavier_normal_(module.weight)
-                # 初始化偏置项为零
+                # set all biases to 0
                 init.zeros_(module.bias)
                 
     def forward(self, x):

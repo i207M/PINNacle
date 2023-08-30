@@ -183,13 +183,13 @@ def get_timestep(filename):
     for line in lines:
         if line.startswith("% X") or line.startswith("% x"):
             matches = re.findall(r't=\d*\.?\d+', line)
-            if len(matches) >= 4:  # 我们需要至少两个时间步
+            if len(matches) >= 4:  # at least 2 time steps are ned
                 t1 = float(matches[0].split('=')[1])
                 t2 = float(matches[1].split('=')[1])
                 t3 = float(matches[2].split('=')[1])
                 t4 = float(matches[3].split('=')[1])
-                return t2 - t1 if t2 - t1 != 0 else (t3 - t1 if t3 - t1 != 0 else t4 - t1)  # 返回时间步长
-    raise ValueError('Failed to find suitable time step')  # 如果在文件中找不到时间步长，抛出异常
+                return t2 - t1 if t2 - t1 != 0 else (t3 - t1 if t3 - t1 != 0 else t4 - t1)  # return time step
+    raise ValueError('Failed to find suitable time step')  # Exception will be throwed in case of no time steo found
 
 def plot_from_data(net, geom, data_name, model_name, channel=1, grid_data=None, layers=None, style='scatter', epoch=-1, scale=1):
     net.cpu()

@@ -89,7 +89,7 @@ class NS_Back_Step(Problem):
         def boundary_other(x):
             return torch.logical_not(torch.logical_or(boundary_in(x), boundary_out(x)))
         
-        def u_func(x):  # 边界流速初值
+        def u_func(x):  # initial boundary flow rate
             return x[:, 1:2] * (1 - x[:, 1:2]) * 4
         
         self.constrain = []
@@ -203,7 +203,7 @@ class NSEquation_Long(Problem):
         def boundary_other(x):
             return torch.logical_not(torch.logical_or(boundary_in(x), boundary_out(x)))
 
-        def u_func(x):  # 边界流速初值
+        def u_func(x):  # initial boundary flow rate
             y, t = x[:, 1:2], x[:, 2:3]
             return torch.sin(torch.pi * y) * (COEF_A1 * torch.sin(torch.pi * t) + COEF_A2 * torch.sin(3 * torch.pi * t) + COEF_A3 * torch.sin(5 * torch.pi * t))
 

@@ -16,7 +16,7 @@ class WaveEquation1D(Problem):
         self.bbox = [0, scale, 0, scale]
         self.geomtime = vpinn.geomtime.timeline(*self.bbox)
 
-        # 定义方程
+        # define wave equation
         def wave_pde(x, u):
             u_xx = vpinn.grad.hessian(u, x, i=0, j=0)
             u_tt = vpinn.grad.hessian(u, x, i=1, j=1)

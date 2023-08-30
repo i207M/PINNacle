@@ -16,9 +16,6 @@ from src.pde.ns import NSEquation_LidDriven, NS_Back_Step, NSEquation_Long
 from src.pde.wave import WaveEquation1D, WaveHeterogeneous, WaveEquation2D_Long
 from src.pde.chaotic import GrayScottEquation, KuramotoSivashinskyEquation
 from src.pde.inverse import PoissonInv, HeatInv
-# current_file_path = os.path.abspath(__file__)
-# current_file_directory = os.path.dirname(current_file_path)
-# os.chdir(current_file_directory)
 parser = argparse.ArgumentParser(description='PINNBench trainer')
 parser.add_argument('--name', type=str, default="benchmark")
 parser.add_argument('--case', type=str, default='all', help="input testcase name")
@@ -56,7 +53,7 @@ def parse_loss_weight():
     return weights
 
 def extract_numbers(s):
-    # 使用正则表达式找到字符串中的所有数字，并转换为整数列表
+    # use regular expressions to find all the numbers in the string and convert them to a list of integers
     return [int(n) for n in re.findall(r'\d+', s)]
 
 pde_list = \
@@ -74,12 +71,12 @@ def find_most_similar(input_str, list_strings):
     if input_str == 'all':
         return list(range(len(pde_list)))
     
-    # 使用正则表达式分割输入字符串，以非字母、数字的字符为分隔符
+    # use regular expressions to split the input string with characters other than letters and numbers as delimiters
     substrings = re.split(r'\W+', input_str)
-    # 存储结果的索引列表
+    # store an index list of results
     result_indices = []
 
-    # 遍历每个子字符串并找到在列表中最相似的字符串的索引
+    # iterate over each substring and find the index of the most similar string in the list
     for substring in substrings:
         distances = [lev.distance(substring, list_string) for list_string in list_strings]
         result_indices.append(distances.index(min(distances)))
@@ -118,7 +115,7 @@ def is_similar(str1, str2):
     return SequenceMatcher(None, str1, str2).ratio() > 0.8
 
 def find_matches(input_str, match_list):
-    # 使用正则表达式分割输入字符串，非字母数字字符用作分隔符
+    # use regular expressions to split the input string, with non-alphanumeric characters used as delimiters
     input_words = re.split(r'\W+', input_str.lower())
     
     matches = []
