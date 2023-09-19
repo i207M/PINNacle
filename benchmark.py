@@ -93,9 +93,9 @@ if __name__ == "__main__":
 
             net = dde.nn.FNN([pde.input_dim] + parse_hidden_layers(command_args) + [pde.output_dim], "tanh", "Glorot normal")
             if command_args.method == "laaf":
-                net = DNN_LAAF(len(parse_hidden_layers(command_args))-1, parse_hidden_layers[0], pde.input_dim, pde.output_dim)
+                net = DNN_LAAF(len(parse_hidden_layers(command_args)) - 1, parse_hidden_layers(command_args)[0], pde.input_dim, pde.output_dim)
             elif command_args.method == "gaaf":
-                net = DNN_GAAF(len(parse_hidden_layers(command_args))-1, parse_hidden_layers[0], pde.input_dim, pde.output_dim)
+                net = DNN_GAAF(len(parse_hidden_layers(command_args)) - 1, parse_hidden_layers(command_args)[0], pde.input_dim, pde.output_dim)
             net = net.float()
 
             loss_weights = parse_loss_weight(command_args)
