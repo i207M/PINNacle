@@ -88,7 +88,7 @@ class WaveHeterogeneous(Problem):
         
 class WaveEquation2D_Long(Problem):
 
-    def __init__(self, bbox=[0, 1, 0, 1, 0, 100], a=20, m1=1, m2=1, n1=1, n2=1, p1=1, p2=1, device='cpu'):
+    def __init__(self, bbox=[0, 1, 0, 1, 0, 100], a=np.sqrt(2), m1=1, m2=3, n1=1, n2=2, p1=1, p2=1, device='cpu'):
         super().__init__(device)
 
         # output dim
@@ -120,6 +120,6 @@ class WaveEquation2D_Long(Problem):
         self.u_ref = ref_sol
 
         self.constrain = []
-        self.constrain.append(vpinn.ic.dirichlet(self.geomtime, ref_sol, 100))
+        self.constrain.append(vpinn.ic.neumann(self.geomtime, lambda x: torch.zeros_like(x[:,0:1]), 100))
         self.constrain.append(vpinn.bc.dirichlet(self.geomtime, ref_sol, 100))
         

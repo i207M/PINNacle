@@ -18,7 +18,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 6,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Burgers1d",
         "data": "burgers1d.dat"
     },
@@ -43,7 +43,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Burgers2d",
         "data": "burgers2d.dat",
         "layers": [
@@ -94,7 +94,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Poisson2d",
         "data": "poisson_classic.dat"
     },
@@ -120,7 +120,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Poisson-Boltzmann2d",
         "data": "poisson_boltzmann2d.dat"
     },
@@ -144,7 +144,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Poisson3d",
         "data": "poisson_3d.dat",
         "layers": "self.layers",
@@ -169,7 +169,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Poisson2d_Many_subdomains",
         "data": "poisson_manyarea.dat"
     },
@@ -193,7 +193,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Heat2d_Varying_Source",
         "data": "heat_darcy.dat",
         "layers": [
@@ -223,7 +223,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "Heat_Multi_scale",
         "data": "heat_multiscale.dat",
         "layers": [
@@ -270,7 +270,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "HeatComplex",
         "data": "heat_complex.dat",
         "layers": [
@@ -301,7 +301,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "HeatLongTime",
         "data": "heat_longtime.dat",
         "layers": [
@@ -333,7 +333,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "2D_Lid_Driven"
     },
     "NS_Back_Step": {
@@ -366,7 +366,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "NS_Back_Step",
         "data": "ns_4_obstacle.dat"
     },
@@ -394,7 +394,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "NSEquation_Long",
         "data": "ns_long.dat",
         "layers": [
@@ -427,7 +427,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "WaveEquation1D"
     },
     "WaveHeterogeneous": {
@@ -451,7 +451,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "WaveHeterogeneous",
         "data": "wave_darcy.dat",
         "layers": [
@@ -464,9 +464,9 @@
     "WaveEquation2D_Long": {
         "layer_size": [
             3,
-            20,
-            20,
-            20,
+            30,
+            30,
+            30,
             1
         ],
         "neuron_type": "tanh",
@@ -482,7 +482,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "WaveEquation2D_Long",
         "layers": [
             0,
@@ -511,7 +511,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "GrayScottEquation",
         "data": "grayscott.dat",
         "layers": [
@@ -539,7 +539,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "KuramotoSivashinskyEquation",
         "data": "Kuramoto_Sivashinsky.dat",
         "layers": [
@@ -567,7 +567,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "PoissonInv"
     },
     "HeatInv": {
@@ -590,7 +590,7 @@
         ],
         "Q": 10,
         "test_fcn_num": 5,
-        "epoch_num": 20000,
+        "epoch_num": 10000,
         "model_name": "HeatInv",
         "layers": [
             0,
