@@ -56,8 +56,8 @@ class ArgContainer:
         self.WaveEquation2D_Long = SolverArg(layer_size=[3, 30, 30, 30, 1], neuron_type='tanh', grid_num=[8] * 3, coef=[0.1, 0.1, 0.1], Q=10, test_fcn_num=5, epoch_num=10000, model_name='WaveEquation2D_Long', layers=[0, 1, 2, 3])
         self.GrayScottEquation = SolverArg(layer_size=[3, 20, 20, 20, 2], neuron_type='tanh', grid_num=[4] * 3, coef=[0.1] * 2, Q=10, test_fcn_num=5, epoch_num=10000, model_name='GrayScottEquation', layers=[0, 10, 20, 30], data='grayscott.dat')
         self.KuramotoSivashinskyEquation = SolverArg(layer_size=[2, 20, 20, 20, 1], neuron_type='tanh', grid_num=[8] * 2, coef=[1] * 1, Q=10, test_fcn_num=5, epoch_num=10000, model_name='KuramotoSivashinskyEquation', layers=[0, 10, 20, 30], data='Kuramoto_Sivashinsky.dat')
-        self.PoissonInv = SolverArg(layer_size=[2, 20, 20, 20, 1], neuron_type='tanh', grid_num=[4] * 2, coef=[10] * 1, Q=10, test_fcn_num=5, epoch_num=10000, model_name='PoissonInv')
-        self.HeatInv = SolverArg(layer_size=[3, 20, 20, 20, 1], neuron_type='tanh', grid_num=[8] * 3, coef=[0.1] * 2, Q=10, test_fcn_num=5, epoch_num=10000, model_name='HeatInv', layers=[0, 0.5, 1])
+        self.PoissonInv = SolverArg(layer_size=[2, 20, 20, 20, 1], neuron_type='tanh', grid_num=[4] * 2, coef=[10] * 2, Q=10, test_fcn_num=5, epoch_num=10000, model_name='PoissonInv')
+        self.HeatInv = SolverArg(layer_size=[3, 20, 20, 20, 1], neuron_type='tanh', grid_num=[8] * 3, coef=[0.1] * 4, Q=10, test_fcn_num=5, epoch_num=10000, model_name='HeatInv', layers=[0, 0.5, 1])
         
     def to_json(self, file_path='src/config/default_arg.json'):
         arg_map = {

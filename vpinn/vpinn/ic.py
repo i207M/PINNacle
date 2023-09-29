@@ -5,7 +5,7 @@ from .time import time
 from .geomtime import timeline, timeplane
 from .net_class import MLP
 class ic:
-    def __init__(self, domain: time, func, num, locate_func=None, u_component=0):
+    def __init__(self, domain: time, func, num, locate_func=None, u_component=0, inverse=False):
         '''
         Here domain is corresponding to the geom in bc.
         '''
@@ -14,6 +14,7 @@ class ic:
         self.locate_func = locate_func
         self.u_component = u_component
         self.num = num
+        self.inverse = inverse
 
     @abstractmethod
     def loss(self, net, device='cpu'):

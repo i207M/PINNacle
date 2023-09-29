@@ -11,7 +11,7 @@ fi
 
 if [ "$1" == "l" ] || [ -z "$1" ]; then
   # echo "run python benchmark_vpinn.py --device '0,1,2,3,4,5,6,7' --iter 200 ..."
-  python benchmark_vpinn.py --device '0,1,2,4,5,6,7' --plotevery 20000 --iter 20000 --params True 
+  python benchmark_vpinn.py --device '0,1,2,4,5,6,7' --plotevery 1000 --iter 20000 --case 'PoissonInv, HeatInv'
 fi
 
 if [ "$1" != "c" ] && [ "$1" != "l" ] && [ ! -z "$1" ]; then

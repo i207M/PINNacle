@@ -156,13 +156,15 @@ def run_and_plot(device, i, queue, lr, logevery, plotevery, gpu_status, args=Non
     thread.run(None, i, queue, lr, logevery, plotevery, args)
     result = thread.plot()
     with open(f'./log/task_id:{i}, {pde_list[task_list[i]].__name__}.txt', 'a') as file:
-        for i in range(len(selected_error_scale)):
-            # measure the error of the final model
-            file.write(f'{error_scale_name[selected_error_scale[i]]} error: {error_scale[selected_error_scale[i]](*result[-1])}' + '\n')
-    
-        pdebench_error = vpinn.pdebench_err.metric_func(*result[-1])
-        for i in range(len(pdebench_error_name)):
-            file.write(f'{pdebench_error_name[i]}: {pdebench_error[i]}' + '\n')
+        for j in range(len(result)):
+            file.write(f'model {j}:\n')
+            for i in range(len(selected_error_scale)):
+                # measure the error of all models
+                file.write(f'{error_scale_name[selected_error_scale[i]]} error: {error_scale[selected_error_scale[i]](*result[j])}' + '\n')
+        
+            pdebench_error = vpinn.pdebench_err.metric_func(*result[j])
+            for i in range(len(pdebench_error_name)):
+                file.write(f'{pdebench_error_name[i]}: {pdebench_error[i]}' + '\n')
             
     gpu_status[device] = 'free'
     del thread

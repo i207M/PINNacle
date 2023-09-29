@@ -1,0 +1,604 @@
+{
+    "Burgers1d": {
+        "layer_size": [
+            2,
+            15,
+            15,
+            15,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            6,
+            6
+        ],
+        "coef": [
+            0.001,
+            0.001
+        ],
+        "Q": 10,
+        "test_fcn_num": 6,
+        "epoch_num": 10000,
+        "model_name": "Burgers1d",
+        "data": "burgers1d.dat"
+    },
+    "Burgers2d": {
+        "layer_size": [
+            3,
+            30,
+            30,
+            30,
+            2
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            6,
+            6,
+            6
+        ],
+        "coef": [
+            1,
+            1,
+            10
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Burgers2d",
+        "data": "burgers2d.dat",
+        "layers": [
+            0
+        ]
+    },
+    "Poisson1": {
+        "layer_size": [
+            2,
+            15,
+            15,
+            15,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4
+        ],
+        "coef": [
+            10
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Poisson1",
+        "u_ref": "self.u"
+    },
+    "Poisson2d": {
+        "layer_size": [
+            2,
+            15,
+            15,
+            15,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            32,
+            32
+        ],
+        "coef": [
+            0.4,
+            0.4,
+            0.4,
+            0.4,
+            0.4
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Poisson2d",
+        "data": "poisson_classic.dat"
+    },
+    "Poisson_boltzmann2d": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            32,
+            32
+        ],
+        "coef": [
+            1e-05,
+            1e-05,
+            1e-05,
+            1e-05,
+            1e-05
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Poisson-Boltzmann2d",
+        "data": "poisson_boltzmann2d.dat"
+    },
+    "Poisson3d": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8,
+            8
+        ],
+        "coef": [
+            1,
+            1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Poisson3d",
+        "data": "poisson_3d.dat",
+        "layers": "self.layers",
+        "grid_data": "self.griddata"
+    },
+    "Poisson2d_Many_subdomains": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8
+        ],
+        "coef": [
+            1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Poisson2d_Many_subdomains",
+        "data": "poisson_manyarea.dat"
+    },
+    "Heat2d_Varying_Source": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            1,
+            1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Heat2d_Varying_Source",
+        "data": "heat_darcy.dat",
+        "layers": [
+            0,
+            0.5,
+            2,
+            3.5
+        ]
+    },
+    "Heat_Multi_scale": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "Heat_Multi_scale",
+        "data": "heat_multiscale.dat",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "HeatComplex": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1,
+            1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "HeatComplex",
+        "data": "heat_complex.dat",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "HeatLongTime": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            1,
+            1,
+            1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "HeatLongTime",
+        "data": "heat_longtime.dat",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "NSEquation_LidDriven": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            3
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "2D_Lid_Driven"
+    },
+    "NS_Back_Step": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            3
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "NS_Back_Step",
+        "data": "ns_4_obstacle.dat"
+    },
+    "NSEquation_Long": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            3
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "NSEquation_Long",
+        "data": "ns_long.dat",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "WaveEquation1D": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "WaveEquation1D"
+    },
+    "WaveHeterogeneous": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8,
+            8
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "WaveHeterogeneous",
+        "data": "wave_darcy.dat",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "WaveEquation2D_Long": {
+        "layer_size": [
+            3,
+            30,
+            30,
+            30,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8,
+            8
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "WaveEquation2D_Long",
+        "layers": [
+            0,
+            1,
+            2,
+            3
+        ]
+    },
+    "GrayScottEquation": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            2
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4,
+            4
+        ],
+        "coef": [
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "GrayScottEquation",
+        "data": "grayscott.dat",
+        "layers": [
+            0,
+            10,
+            20,
+            30
+        ]
+    },
+    "KuramotoSivashinskyEquation": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8
+        ],
+        "coef": [
+            1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 10000,
+        "model_name": "KuramotoSivashinskyEquation",
+        "data": "Kuramoto_Sivashinsky.dat",
+        "layers": [
+            0,
+            10,
+            20,
+            30
+        ]
+    },
+    "PoissonInv": {
+        "layer_size": [
+            2,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            4,
+            4
+        ],
+        "coef": [
+            10,
+            10
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 20000,
+        "model_name": "PoissonInv"
+    },
+    "HeatInv": {
+        "layer_size": [
+            3,
+            20,
+            20,
+            20,
+            1
+        ],
+        "neuron_type": "tanh",
+        "grid_num": [
+            8,
+            8,
+            8
+        ],
+        "coef": [
+            0.1,
+            0.1,
+            0.1,
+            0.1
+        ],
+        "Q": 10,
+        "test_fcn_num": 5,
+        "epoch_num": 20000,
+        "model_name": "HeatInv",
+        "layers": [
+            0,
+            0.5,
+            1
+        ]
+    }
+}

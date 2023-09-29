@@ -18,7 +18,7 @@ class bc:
         self._device = value
         self.x = self.x.to(value)
         
-    def __init__(self, geometry: geom, func, num, locate_func=None, u_component=0):
+    def __init__(self, geometry: geom, func, num, locate_func=None, u_component=0, inverse=False):
         self.geometry = geometry
         self.func = func
         self.locate_func = locate_func
@@ -27,6 +27,7 @@ class bc:
         self.boundary_points = self.geometry.generate_boundary_points(self.num)
         self.tmp = None
         self._device = 'cpu'
+        self.inverse = inverse
         
         # mask should be a tensor consisting of bools
         if (self.locate_func is not None) and ((self.__class__.__name__ == 'periodic') == False):

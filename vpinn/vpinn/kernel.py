@@ -33,7 +33,10 @@ class VPINN(ABC):
             if self.constrains:
                 for i in range(len(self.constrains)):
                     loss_names.append('loss_' + type(self.constrains[i]).__name__)
-                    losses.append(coef[i] * self.constrains[i].loss(self.net, device=self.device))
+                    if self.constrains[i].inverse:
+                        losses.append(coef[i] * self.constrains[i].loss(self.net_u, device=self.device))
+                    else:
+                        losses.append(coef[i] * self.constrains[i].loss(self.net, device=self.device))
 
             loss_tot = sum(losses)
             if epoch != 0 and (epoch + 1) % logevery == 0:
@@ -69,6 +72,7 @@ class VPINN2d(VPINN):
         self.inverse = inverse
         if inverse:
             self.u = ref
+            self.net_u = MLP(layer_sizes, type).to(device)
         else:
             self.u = None
             
@@ -120,7 +124,7 @@ class VPINN2d(VPINN):
             
         else:
             a = self.net(X)
-            lhs = self.pde(X, self.u(X), a)
+            lhs = self.pde(X, self.net_u(X), a)
         
         result = torch.einsum('mcl,ncl->mncl', \
             lhs.view(self.grid_num[0] * self.grid_num[1], self.Q ** 2, self.layer_sizes[-1]), self.test_fcn0.view(self.test_fcn_num ** 2, self.Q ** 2, self.layer_sizes[-1]))
@@ -149,6 +153,7 @@ class VPINN3d(VPINN):
         self.inverse = inverse
         if inverse:
             self.u = ref
+            self.net_u = MLP(layer_sizes, type).to(device)
         else:
             self.u = None
 
@@ -210,7 +215,7 @@ class VPINN3d(VPINN):
 
         else:
             a = self.net(X)
-            lhs = self.pde(X, self.u(X), a)
+            lhs = self.pde(X, self.net_u(X), a)
 
         result = torch.einsum('mcl,ncl->mncl', \
                 lhs.view(self.grid_num[0] * self.grid_num[1] * self.grid_num[2], self.Q ** 3, self.layer_sizes[-1]), self.test_fcn0.view(self.test_fcn_num ** 3, self.Q ** 3, self.layer_sizes[-1]))

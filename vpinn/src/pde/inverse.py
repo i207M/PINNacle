@@ -42,6 +42,7 @@ class PoissonInv(Problem):
 
         self.constrain = []
         self.constrain.append(vpinn.bc.dirichlet(self.geom, a_ref, 100))
+        self.constrain.append(vpinn.bc.dirichlet(self.geom, u_ref, 100, inverse=True))
         
         self.inverse = True
         self.u_ref = u_ref
@@ -92,3 +93,5 @@ class HeatInv(Problem):
         self.constrain = []
         self.constrain.append(vpinn.bc.dirichlet(self.geomtime, a_ref, 100))
         self.constrain.append(vpinn.ic.dirichlet(self.geomtime, a_ref, 100))
+        self.constrain.append(vpinn.bc.dirichlet(self.geomtime, u_ref, 100, inverse=False))
+        self.constrain.append(vpinn.ic.dirichlet(self.geomtime, u_ref, 100, inverse=False))
