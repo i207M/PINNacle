@@ -146,7 +146,7 @@ class Wave2D_LongTime(baseclass.BaseTimePDE):
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
             u_tt = dde.grad.hessian(u, x, i=2, j=2)
 
-            return [u_tt - (u_xx + a * a * u_yy)]
+            return [u_tt + (u_xx + a * a * u_yy)]
 
         self.pde = pde
         self.set_pdeloss(num=1)
