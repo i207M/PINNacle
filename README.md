@@ -45,6 +45,8 @@ See these references for more details,
 ## Installation
 
 ```shell
+# conda create -n pinnacle python=3.9
+# conda activate pinnacle  # To keep Python environments separate
 git clone https://github.com/i207M/PINNacle.git --depth 1
 cd PINNacle
 pip install -r requirements.txt
