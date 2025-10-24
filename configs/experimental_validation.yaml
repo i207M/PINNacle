@@ -1,0 +1,79 @@
+# Comprehensive experimental validation configuration
+# This configuration defines all parameters for reproducible experiments
+
+# Global settings
+random_seed: 42
+use_docker: true
+
+# Model configuration
+model_config:
+  model_type: "bayesian"
+  network_architecture:
+    dims: [2, 64, 64, 1]
+    activation: "tanh"
+  prior_type: "physics_informed"
+  variational_family: "diagonal_gaussian"
+  num_meta_iterations: 1000
+  num_adaptation_steps: 10
+  learning_rate: 0.001
+  kl_weight: 1.0
+  temperature: 1.0
+
+# Calibration comparison experiment
+calibration_experiment:
+  pde_types: ["heat", "burgers", "poisson", "navier_stokes", "reaction_diffusion"]
+  noise_levels: [0.01, 0.05, 0.1]
+  k_shot_values: [1, 5, 10, 25]
+  num_test_tasks: 50
+  num_posterior_samples: 100
+  methods: ["bayesian", "ensemble", "mc_dropout"]
+  
+  # Statistical analysis settings
+  significance_level: 0.05
+  bonferroni_correction: true
+  bootstrap_iterations: 1000
+
+# Ablation study experiment
+ablation_experiment:
+  pde_type: "heat"  # Focus on single PDE for ablation
+  noise_level: 0.05
+  num_test_tasks: 20
+  
+  # Prior type ablation
+  prior_types: ["standard", "physics_informed", "laplace"]
+  
+  # Variational family ablation
+  variational_families: ["diagonal_gaussian", "full_covariance"]
+  
+  # Hyperparameter ablations
+  kl_weights: [0.1, 0.5, 1.0, 2.0, 5.0]
+  temperatures: [0.5, 1.0, 1.5, 2.0, 3.0]
+
+# Performance targets (for validation)
+performance_targets:
+  ece_threshold: 0.05
+  coverage_range: [0.93, 0.97]
+  ood_auroc_threshold: 0.90
+  inference_time_target: 10.0  # milliseconds
+  memory_usage_target: 5.0     # GB
+
+# Computational resources
+computational_config:
+  device: "auto"  # auto-detect GPU/CPU
+  max_memory_gb: 16
+  num_workers: 4
+  batch_size: 32
+
+# Output configuration
+output_config:
+  save_checkpoints: true
+  save_plots: true
+  save_raw_results: true
+  generate_reports: true
+  
+# Reproducibility settings
+reproducibility:
+  fix_all_seeds: true
+  deterministic_algorithms: true
+  save_environment: true
+  git_tracking: true

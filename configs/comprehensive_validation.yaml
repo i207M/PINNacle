@@ -1,0 +1,230 @@
+# Comprehensive Validation Configuration
+# Configuration for running the complete experimental validation suite
+
+# General settings
+output_dir: 'results/comprehensive_validation'
+random_seed: 42
+
+# Main calibration comparison experiment
+calibration_experiment:
+  # PDE types to test
+  pde_types:
+    - 'heat'
+    - 'burgers'
+    - 'poisson'
+    - 'navier_stokes'
+    - 'reaction_diffusion'
+  
+  # Noise levels for systematic evaluation
+  noise_levels:
+    - 0.01
+    - 0.05
+    - 0.1
+    - 0.2
+  
+  # K-shot values for few-shot learning evaluation
+  k_shot_values:
+    - 1
+    - 5
+    - 10
+    - 25
+  
+  # Number of test tasks per condition
+  num_test_tasks: 50
+  
+  # Number of posterior samples for uncertainty quantification
+  num_posterior_samples: 100
+
+# Ablation studies configuration
+ablation_studies:
+  # Prior types to compare
+  prior_types:
+    - 'standard'
+    - 'physics_informed'
+    - 'laplace'
+  
+  # Variational families to compare
+  variational_families:
+    - 'diagonal'
+    - 'full_covariance'
+  
+  # KL divergence weights to test
+  kl_weights:
+    - 0.1
+    - 0.5
+    - 1.0
+    - 2.0
+  
+  # Temperature scaling values
+  temperature_scales:
+    - 0.5
+    - 1.0
+    - 1.5
+    - 2.0
+
+# Performance benchmarking configuration
+performance_benchmarking:
+  # Batch sizes for scalability testing
+  batch_sizes:
+    - 1
+    - 10
+    - 50
+    - 100
+  
+  # Number of posterior samples for timing analysis
+  num_posterior_samples:
+    - 10
+    - 50
+    - 100
+    - 200
+  
+  # Enable memory profiling
+  memory_profiling: true
+  
+  # Number of timing iterations for statistical reliability
+  timing_iterations: 10
+  
+  # Target performance metrics
+  targets:
+    bayesian_inference_time_ms: 10  # < 10 ms per query
+    bayesian_memory_gb: 5           # < 5 GB memory usage
+    ensemble_speedup_factor: 4.5    # 4-5x faster than ensemble
+
+# Out-of-distribution detection evaluation
+ood_evaluation:
+  # OOD scenarios to test
+  scenarios:
+    - 'spatial_extrapolation'
+    - 'interpolation_gap'
+    - 'parameter_shift'
+    - 'high_noise'
+  
+  # Number of in-distribution samples
+  num_in_dist: 1000
+  
+  # Number of out-of-distribution samples
+  num_ood: 1000
+  
+  # Target performance metrics
+  targets:
+    auroc_threshold: 0.90
+    aupr_threshold: 0.85
+    fpr_at_95_tpr_threshold: 0.10
+
+# Uncertainty decomposition validation
+decomposition_validation:
+  # K values for epistemic uncertainty decrease analysis
+  k_values:
+    - 1
+    - 2
+    - 5
+    - 10
+    - 25
+    - 50
+    - 100
+  
+  # Number of tasks for statistical analysis
+  num_tasks: 20
+  
+  # Number of query points per task
+  num_query_points: 100
+  
+  # Statistical significance thresholds
+  epistemic_slope_threshold: -0.3
+  aleatoric_cv_threshold: 0.2
+  p_value_threshold: 0.05
+
+# Target performance metrics for validation
+target_metrics:
+  calibration:
+    ece_threshold: 0.05
+    coverage_lower: 0.93
+    coverage_upper: 0.97
+    crps_improvement: 0.1  # Relative improvement over baselines
+  
+  efficiency:
+    inference_time_ms: 10
+    memory_usage_gb: 5
+    speedup_factor_min: 4.0
+    speedup_factor_max: 6.0
+  
+  ood_detection:
+    auroc_threshold: 0.90
+    aupr_threshold: 0.85
+    fpr_at_95_tpr: 0.10
+  
+  decomposition:
+    epistemic_decreasing: true
+    aleatoric_constant: true
+    decomposition_valid: true
+
+# Statistical analysis settings
+statistical_analysis:
+  # Significance level for hypothesis testing
+  alpha: 0.05
+  
+  # Multiple comparison correction method
+  correction_method: 'bonferroni'
+  
+  # Effect size thresholds (Cohen's d)
+  effect_size_thresholds:
+    small: 0.2
+    medium: 0.5
+    large: 0.8
+  
+  # Bootstrap settings for confidence intervals
+  bootstrap_iterations: 1000
+  confidence_level: 0.95
+
+# Visualization settings
+visualization:
+  # Figure settings
+  figure_dpi: 300
+  figure_format: 'png'
+  
+  # Color palette for methods
+  method_colors:
+    bayesian: '#1f77b4'
+    ensemble: '#ff7f0e'
+    mc_dropout: '#2ca02c'
+  
+  # Plot styles
+  style: 'seaborn-v0_8'
+  context: 'paper'
+  
+  # Font settings
+  font_size: 12
+  title_size: 14
+  label_size: 10
+
+# Reproducibility settings
+reproducibility:
+  # Random seeds for different components
+  torch_seed: 42
+  numpy_seed: 42
+  python_seed: 42
+  
+  # CUDA settings for reproducibility
+  cuda_deterministic: true
+  cuda_benchmark: false
+  
+  # Save model checkpoints
+  save_checkpoints: true
+  checkpoint_dir: 'checkpoints'
+  
+  # Save intermediate results
+  save_intermediate: true
+  intermediate_dir: 'intermediate_results'
+
+# Logging configuration
+logging:
+  level: 'INFO'
+  format: '%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+  
+  # Log files
+  console_log: true
+  file_log: true
+  log_file: 'validation_suite.log'
+  
+  # Progress reporting
+  progress_interval: 50  # Report progress every N experiments

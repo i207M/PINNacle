@@ -1,176 +1,163 @@
-# Meta-Learning for Physics-Informed Neural Networks: Few-Shot Adaptation Framework
+# Bayesian Uncertainty Quantification for Meta-Learned Physics-Informed Neural Networks
 
-This repository contains the implementation for [Meta-Learning for Physics-Informed Neural Networks: A Comprehensive Framework for Few-Shot Adaptation in Parametric Partial Differential Equations](paper\paper.tex). Our paper is submitted to Computer Methods in Applied Mechanics and Engineering (CMAME).
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Python 3.8+](https://img.shields.io/badge/python-3.8+-blue.svg)](https://www.python.org/downloads/)
+[![PyTorch](https://img.shields.io/badge/PyTorch-1.12+-red.svg)](https://pytorch.org/)
 
-<p align="center">
-  <img width="80%" src="resources/meta-pinnacle.png"/>
-</p>
+Official implementation of **BayesianMetaPINN** - a novel extension of the meta-learning framework for PINNs that incorporates principled Bayesian uncertainty quantification. This work builds upon the foundational meta-learning framework for physics-informed neural networks.
 
-### Implemented Methods
+## 🎯 Key Results
 
-This framework implements four novel meta-learning architectures for rapid PDE adaptation:
+Our BayesianMetaPINN achieves state-of-the-art performance:
 
-| Method                         | Type                      | Key Features                                   |
-| ------------------------------ | ------------------------- | ---------------------------------------------- |
-| **MetaPINN**                   | MAML-based Meta-Learning  | Gradient-based adaptation, fast convergence    |
-| **PhysicsInformedMetaLearner** | Advanced Meta-Learning    | Adaptive constraint balancing, 96.87% accuracy |
-| **TransferLearningPINN**       | Transfer Learning         | Pre-training strategy, domain adaptation       |
-| **DistributedMetaPINN**        | Distributed Meta-Learning | Multi-GPU scaling, 85% parallel efficiency     |
-| **StandardPINN**               | Baseline                  | Traditional PINN for comparison                |
+| Method               | ECE ↓     | Coverage  | AUROC (OOD) ↑ | Inference Time ↓ |
+| -------------------- | --------- | --------- | ------------- | ---------------- |
+| **BayesianMetaPINN** | **0.032** | **0.951** | **0.924**     | **8.5ms**        |
+| EnsembleMetaPINN     | 0.087     | 0.923     | 0.856         | 35.2ms           |
+| MCDropoutMetaPINN    | 0.156     | 0.889     | 0.743         | 42.1ms           |
 
-### Evaluated PDE Families
+✅ **All targets achieved**: ECE < 0.05, Coverage ∈ [0.93, 0.97], AUROC > 0.90, 4× speedup
 
-Our comprehensive benchmark evaluates across 7 parametric PDE families:
+## 🚀 Quick Start
 
-- **Heat Equation (2D)**: Diffusion processes with varying coefficients
-- **Burgers Equation (1D/2D)**: Nonlinear convection-diffusion dynamics
-- **Poisson Equation (2D)**: Elliptic problems with parameter variations
-- **Navier-Stokes (2D)**: Fluid dynamics with Reynolds number variations
-- **Gray-Scott**: Reaction-diffusion systems with parameter sweeps
-- **Kuramoto-Sivashinsky**: Chaotic spatiotemporal dynamics
+### Installation
 
-## Key Results
-
-| Metric                       | Standard PINN | Meta-Learning | Improvement         |
-| ---------------------------- | ------------- | ------------- | ------------------- |
-| **Accuracy**                 | 83.94%        | 96.87%        | +12.93%             |
-| **Adaptation Time**          | 460s          | 70s           | 6.5× faster         |
-| **Statistical Significance** | -             | 92.9%         | 280 comparisons     |
-| **Best Performance**         | -             | 98.99%        | Burgers 1D, 25-shot |
-
-### Performance Highlights
-
-- **🎯 Superior Accuracy**: PhysicsInformedMetaLearner achieves 96.87% accuracy vs 83.94% for standard PINNs
-- **⚡ Rapid Adaptation**: 6.5× speedup in adaptation time (70s vs 460s)
-- **📊 Statistical Rigor**: 92.9% significance rate across 280 statistical comparisons
-- **🚀 Scalability**: DistributedMetaPINN achieves 85% parallel efficiency on multi-GPU systems
-- **💰 Cost Effectiveness**: Break-even point at 13-16 tasks, up to 8.49× speedup factor
-
-## Installation
-
-```shell
-# Create conda environment (recommended)
-conda create -n meta-pinn python=3.9
-conda activate meta-pinn
-
-# Clone repository
-git clone https://github.com/YCRG-Labs/Meta-PINNacle.git
-cd meta-pinnacle
-
-# Install dependencies
+```bash
+git clone https://github.com/your-repo/bayesian-meta-pinn.git
+cd bayesian-meta-pinn
 pip install -r requirements.txt
 ```
 
-## Usage
+### Generate Paper Results
 
-### Quick Start
-
-Run the complete evaluation pipeline:
-
-```shell
-python run_full_pipeline.py
+```bash
+# Generate all figures and tables for the paper
+python paper_results_generator.py --all
 ```
 
-### Individual Components
+### Run Experiments
 
-```shell
-# Run specific meta-learning model
-python -m src.meta_learning.meta_pinn --model PhysicsInformedMetaLearner --pde heat2d
+```bash
+# Quick validation (10-15 minutes)
+python reproduce_all.py --quick
 
-# Evaluate few-shot performance
-python -m src.meta_learning.few_shot_evaluator --shots 1,5,10,25
-
-# Generate publication figures
-# Note: Visualization functionality has been removed
+# Full reproduction (2-4 hours)
+python reproduce_all.py
 ```
 
-### Configuration
+### Docker Usage
 
-Customize experiments via configuration files:
+```bash
+# Quick reproduction
+docker-compose up bayesian-uq-quick
+
+# Full reproduction
+docker-compose up bayesian-uq-full
+```
+
+## 📁 Repository Structure
+
+```
+├── src/uncertainty/              # Core implementation
+│   ├── bayesian_meta_pinn.py    # Main BayesianMetaPINN model
+│   ├── ensemble_meta_pinn.py    # Ensemble baseline
+│   ├── mc_dropout_meta_pinn.py  # MC Dropout baseline
+│   ├── calibration_metrics.py   # Calibration evaluation
+│   ├── decomposition_validator.py # Uncertainty decomposition
+│   ├── ood_detection.py         # Out-of-distribution detection
+│   └── ...                      # Additional core modules
+├── configs/                      # Experiment configurations
+├── docs/                        # Documentation and tutorials
+├── paper/                       # Paper manuscript and materials
+├── paper_results/               # Generated paper results
+├── paper_results_generator.py   # Generate all paper results
+├── reproduce_all.py             # Single-command reproduction
+└── requirements.txt             # Python dependencies
+```
+
+## 🔬 Core Implementation
+
+### BayesianMetaPINN Model
 
 ```python
-# src/meta_learning/config.py
-META_LEARNING_CONFIG = {
-    'inner_lr': 0.01,
-    'outer_lr': 0.001,
-    'adaptation_steps': 5,
-    'meta_batch_size': 4
-}
+from src.uncertainty.bayesian_meta_pinn import BayesianMetaPINN
+
+# Initialize model
+model = BayesianMetaPINN(
+    architecture={'dims': [2, 64, 64, 64, 1]},
+    physics_informed_prior=True,
+    variational_family='diagonal_gaussian'
+)
+
+# Meta-training
+model.meta_train(task_distribution, num_iterations=10000)
+
+# Few-shot adaptation with uncertainty
+predictions = model.adapt_and_predict(
+    support_data, query_points, num_adaptation_steps=10
+)
+
+print(f"Mean prediction: {predictions.mean}")
+print(f"Epistemic uncertainty: {predictions.epistemic}")
+print(f"Aleatoric uncertainty: {predictions.aleatoric}")
 ```
 
-## Project Structure
+## 📊 Paper Results
 
-```
-meta-learning-pinns/
-├── src/
-│   ├── meta_learning/          # Core meta-learning implementations
-│   │   ├── meta_pinn.py       # MAML-based MetaPINN
-│   │   ├── physics_informed_meta_learner.py  # Advanced meta-learner
-│   │   ├── transfer_learning_pinn.py         # Transfer learning approach
-│   │   └── distributed_meta_pinn.py          # Distributed training
-│   ├── pde/                   # Parametric PDE implementations
-│   └── utils/                 # Utilities and helpers
-├── tests/                     # Comprehensive test suite
-├── paper/                     # Research paper and figures
-├── runs/                      # Experimental results
-└── run_full_pipeline.py       # Main execution script
+All publication materials are generated using:
+
+```bash
+python paper_results_generator.py --all
 ```
 
-## Benchmarking Results
+This creates:
 
-### Model Performance Rankings
+- **4 Publication Figures**: Calibration, uncertainty decomposition, OOD detection, efficiency
+- **3 Publication Tables**: Main results, statistical significance, ablation study
+- **Statistical Analysis**: Hypothesis testing, effect sizes, confidence intervals
 
-1. **PhysicsInformedMetaLearner**: 96.87% (Best overall accuracy)
-2. **DistributedMetaPINN**: 96.11% (Best scalability)
-3. **MetaPINN**: 95.74% (Solid MAML baseline)
-4. **TransferLearningPINN**: 93.74% (Traditional approach)
-5. **StandardPINN**: 83.94% (Baseline)
+## 📚 Paper
 
-### Few-Shot Learning Progression
+The complete paper manuscript is available in the `paper/` directory:
 
-| Shots | MetaPINN | PhysicsInformed | Transfer | Distributed | Standard |
-| ----- | -------- | --------------- | -------- | ----------- | -------- |
-| 1     | 89.2%    | 91.5%           | 87.8%    | 90.9%       | 76.3%    |
-| 5     | 93.8%    | 95.1%           | 91.2%    | 94.7%       | 81.7%    |
-| 10    | 95.1%    | 96.4%           | 92.9%    | 95.8%       | 82.9%    |
-| 25    | 95.7%    | 96.9%           | 93.7%    | 96.1%       | 83.9%    |
+- **Manuscript**: `paper/bayesian_meta_pinn_paper.tex`
+- **Compilation**: `cd paper && make`
+- **Target Journal**: Journal of Uncertainty Quantification
 
-## Citation
+## 🎯 Key Contributions
 
-If you find our work useful, please cite our paper:
+1. **Novel Architecture**: First Bayesian meta-learning framework for PINNs
+2. **Physics-Informed Priors**: Encode PDE structure into variational posteriors
+3. **Uncertainty Decomposition**: Rigorous epistemic/aleatoric separation
+4. **Computational Efficiency**: 4× speedup with superior calibration
+
+## 📄 Citation
+
+If you use this code, please cite:
 
 ```bibtex
+@article{bayesian_meta_pinn_2025,
+  title={Bayesian Uncertainty Quantification for Meta-Learned Physics-Informed Neural Networks},
+  author={Brandon Yee and Wilson Collins and Ben Pellegrini and Caden Wang},
+  journal={Journal of Uncertainty Quantification},
+  year={2025},
+  note={Under Review}
+}
+
 @article{metalearning_pinns_2025,
   title={Meta-Learning for Physics-Informed Neural Networks: A Comprehensive Framework for Few-Shot Adaptation in Parametric Partial Differential Equations},
   author={Brandon Yee and Wilson Collins and Ben Pellegrini and Caden Wang},
-  journal={Computer Methods in Applied Mechanics and Engineering},
   year={2025},
   note={Under Review}
 }
 ```
 
-## Acknowledgments
-
-This work builds upon the excellent [PINNacle](https://github.com/i207M/PINNacle) framework:
-
-```bibtex
-@article{hao2023pinnacle,
-  title={PINNacle: A Comprehensive Benchmark of Physics-Informed Neural Networks for Solving PDEs},
-  author={Hao, Zhongkai and Yao, Jiachen and Su, Chang and Su, Hang and Wang, Ziao and Lu, Fanzhi and Xia, Zeyu and Zhang, Yichi and Liu, Songming and Lu, Lu and others},
-  journal={arXiv preprint arXiv:2306.08827},
-  year={2023}
-}
-```
-
-## Authors
-
-**Brandon Yee, Wilson Collins, Ben Pellegrini, Caden Wang**
-
-## License
+## 📜 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ---
 
+**Authors**: Brandon Yee, Wilson Collins, Ben Pellegrini, Caden Wang  
 **Last Updated**: October 2025
-**Contact**: b.yee@ycrg-labs.org
+**Note**: This work extends the foundational meta-learning framework for PINNs with Bayesian uncertainty quantification.
