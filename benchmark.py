@@ -36,11 +36,11 @@ from src.utils.rar import rar_wrapper
 
 
 pde_list = [
-    Poisson2D_Classic,
-    PoissonBoltzmann2D,
-    Poisson3D_ComplexGeometry,
-    Poisson2D_ManyArea,
-    PoissonND,
+    Poisson2D_Classic, # 3
+    PoissonBoltzmann2D, # 4
+    Poisson3D_ComplexGeometry, # 5
+    Poisson2D_ManyArea, # 6
+    PoissonND, # 19
 ]
 
 # pde_list += \
