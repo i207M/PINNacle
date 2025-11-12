@@ -13,13 +13,15 @@ def make_lln(*components, eps=1):
 
 class Poisson1D(baseclass.BasePDE):
 
-    def __init__(self, a=1, use_lln=False):
+    def __init__(self, a=1, use_lln=False, lln_eps=1):
         super().__init__()
         # Output Dim
         self.output_dim = 1
         # Domain
         self.bbox = [0, 2 * np.pi / a]
         self.geom = dde.geometry.Interval(*self.bbox)
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         # PDE
         def f(x):
@@ -28,7 +30,7 @@ class Poisson1D(baseclass.BasePDE):
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             fx = f(x)
-            return (u_xx + fx) / make_lln(u_xx, fx) if use_lln else u_xx + fx
+            return (u_xx + fx) / make_lln(u_xx, fx, eps=lln_eps) if use_lln else u_xx + fx
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -45,7 +47,7 @@ class Poisson1D(baseclass.BasePDE):
 
 class Poisson2D_Classic(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1, use_lln=False):
+    def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1, use_lln=False, lln_eps=1):
         super().__init__()
         # Output Dim
         self.output_dim = 1
@@ -57,12 +59,15 @@ class Poisson2D_Classic(baseclass.BasePDE):
             disk = dde.geometry.Disk(c[0:2], c[2])
             self.geom = dde.geometry.CSGDifference(self.geom, disk)
 
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
+
         # PDE
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
 
-            return [(u_xx + u_yy) / make_lln(u_xx, u_yy)] if use_lln else [u_xx + u_yy]
+            return [(u_xx + u_yy) / make_lln(u_xx, u_yy, eps=lln_eps)] if use_lln else [u_xx + u_yy]
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -110,6 +115,7 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
             bbox=[-1, 1, -1, 1],
             circ=[(0.5, 0.5, 0.2), (0.4, -0.4, 0.4), (-0.2, -0.7, 0.1), (-0.6, 0.5, 0.3)],
             use_lln=False,
+            lln_eps=1,
     ):
         super().__init__()
         # output dim
@@ -123,6 +129,9 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
             geom = dde.geometry.csg.CSGDifference(geom, disk)
         self.geom = geom
 
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
+
         # PDE
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
@@ -135,7 +144,7 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
 
             fx = f(x)
             eq = (-(u_xx + u_yy) + k ** 2 * u - fx)
-            return eq / make_lln(u_xx, u_yy, k ** 2 * u, fx) if use_lln else eq
+            return eq / make_lln(u_xx, u_yy, k ** 2 * u, fx, eps=lln_eps) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -181,6 +190,7 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
         k=(8, 10),
         mu=(1, 1),
         use_lln=False,
+        lln_eps=1,
     ):
         super().__init__()
         # output dim
@@ -193,6 +203,9 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
             sphere = dde.geometry.Sphere(circ[i][0:3], circ[i][3])
             geom = dde.geometry.csg.CSGDifference(geom, sphere)
         self.geom = geom
+
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         # PDE
         def pde(x, u):
@@ -211,7 +224,7 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
             ks = torch.where(x[:, 2] < interface_z, k[0]**2, k[1]**2).unsqueeze(dim=-1)
             fx = f(x)
             eq = -mus * (u_xx + u_yy + u_zz) + ks * u - fx
-            return eq / make_lln(mus*u_xx, mus*u_yy, mus*u_zz, ks * u, fx) if use_lln else eq
+            return eq / make_lln(mus*u_xx, mus*u_yy, mus*u_zz, ks * u, fx, eps=lln_eps) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -227,13 +240,16 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
 
 class Poisson2D_ManyArea(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2, use_lln=False):
+    def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2, use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
         # geom
         self.bbox = bbox
         self.geom = dde.geometry.Rectangle(xmin=[bbox[0], bbox[2]], xmax=[bbox[1], bbox[3]])
+
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         # PDE
         self.a_cof = np.loadtxt("ref/poisson_a_coef.dat")
@@ -277,7 +293,7 @@ class Poisson2D_ManyArea(baseclass.BasePDE):
 
             a, f = get_coef(x)
             eq = a * (u_xx + u_yy) + f
-            return eq / make_lln(a * u_xx, a * u_yy, f) if use_lln else eq
+            return eq / make_lln(a * u_xx, a * u_yy, f, eps=lln_eps) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -298,13 +314,16 @@ class Poisson2D_ManyArea(baseclass.BasePDE):
 
 class PoissonND(baseclass.BasePDE):
 
-    def __init__(self, dim=5, len=1, use_lln=False):
+    def __init__(self, dim=5, len=1, use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
         # geom
         self.bbox = [0, len] * dim
         self.geom = dde.geometry.Hypercube(xmin=self.bbox[0::2], xmax=self.bbox[1::2])
+
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         # pde
         def pde(x, u):
@@ -317,7 +336,7 @@ class PoissonND(baseclass.BasePDE):
 
             fx = f(x)
             eq = u_xx + fx
-            return [eq / make_lln(u_xx, fx)] if use_lln else [eq]
+            return [eq / make_lln(u_xx, fx, eps=lln_eps)] if use_lln else [eq]
 
         self.pde = pde
         self.set_pdeloss(num=1)

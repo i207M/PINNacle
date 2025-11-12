@@ -35,14 +35,12 @@ from src.utils.rar import rar_wrapper
 # pde_list = [(Poisson2D_Classic, {"scale": 8})]
 
 
-USE_LLN = False
 pde_list = [
-    (Poisson2D_Classic, {"use_lln": USE_LLN}),
-    (PoissonBoltzmann2D, {"use_lln": USE_LLN}),
-    (Poisson3D_ComplexGeometry, {"use_lln": USE_LLN}),
-    (Poisson2D_ManyArea, {"use_lln": USE_LLN}),
-    (PoissonND, {"use_lln": USE_LLN}),
-
+    Poisson2D_Classic,
+    PoissonBoltzmann2D,
+    Poisson3D_ComplexGeometry,
+    Poisson2D_ManyArea,
+    PoissonND,
 ]
 
 # pde_list += \
@@ -84,6 +82,8 @@ if __name__ == "__main__":
     parser.add_argument('--repeat', type=int, default=1)
     # parser.add_argument('--method', type=str, default="adam")
     parser.add_argument('--method', type=str, default="multiadam")
+    parser.add_argument('--use-lln', action='store_true', help='use LLN for high-dimensional problems', default=False)
+    parser.add_argument('--lln-eps', type=float, default=1e-16, help='epsilon for LLN normalization')
 
     command_args = parser.parse_args()
 
@@ -96,11 +96,16 @@ if __name__ == "__main__":
     for pde_config in pde_list:
 
         def get_model_dde():
+            print(f'Run name {command_args.name}   using method: {command_args.method}')
+
             if isinstance(pde_config, tuple):
-                pde = pde_config[0](**pde_config[1])
+                kwargs = pde_config[1]
+                kwargs["use_lln"] = command_args.use_lln
+                kwargs["lln_eps"] = command_args.lln_eps
+                pde = pde_config[0](**kwargs)
             else:
-                pde = pde_config()
-            
+                pde = pde_config(use_lln=command_args.use_lln, lln_eps=command_args.lln_eps)
+
             # pde.training_points()
             if command_args.method == "gepinn":
                 pde.use_gepinn()
