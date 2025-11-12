@@ -31,6 +31,7 @@ from helper import Timer, cache_x
 
 class _Problem:
     "Base problem class to be inherited by different problem classes"
+    d: tuple[int, int]
     
     @property
     def name(self):

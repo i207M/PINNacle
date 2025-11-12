@@ -23,14 +23,27 @@ from src.utils.rar import rar_wrapper
 
 # It is recommended not to modify this example file.
 # Please copy it as benchmark_xxx.py and make changes according to your own ideas.
-pde_list = \
-    [Burgers1D, Burgers2D] + \
-    [Poisson2D_Classic, PoissonBoltzmann2D, Poisson3D_ComplexGeometry, Poisson2D_ManyArea] + \
-    [Heat2D_VaryingCoef, Heat2D_Multiscale, Heat2D_ComplexGeometry, Heat2D_LongTime] + \
-    [NS2D_LidDriven, NS2D_BackStep, NS2D_LongTime] + \
-    [Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime] + \
-    [KuramotoSivashinskyEquation, GrayScottEquation] + \
-    [PoissonND, HeatND]
+# pde_list = \
+#     [Burgers1D, Burgers2D] + \
+#     [Poisson2D_Classic, PoissonBoltzmann2D, Poisson3D_ComplexGeometry, Poisson2D_ManyArea] + \
+#     [Heat2D_VaryingCoef, Heat2D_Multiscale, Heat2D_ComplexGeometry, Heat2D_LongTime] + \
+#     [NS2D_LidDriven, NS2D_BackStep, NS2D_LongTime] + \
+#     [Wave1D, Wave2D_Heterogeneous, Wave2D_LongTime] + \
+#     [KuramotoSivashinskyEquation, GrayScottEquation] + \
+#     [PoissonND, HeatND]
+
+# pde_list = [(Poisson2D_Classic, {"scale": 8})]
+
+
+USE_LLM = False
+pde_list = [
+    (Poisson2D_Classic, {"use_llm": USE_LLM}),
+    (PoissonBoltzmann2D, {"use_llm": USE_LLM}),
+    (Poisson3D_ComplexGeometry, {"use_llm": USE_LLM}),
+    (Poisson2D_ManyArea, {"use_llm": USE_LLM}),
+    (PoissonND, {"use_llm": USE_LLM}),
+
+]
 
 # pde_list += \
 #     [(Burgers2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] + \
@@ -69,7 +82,8 @@ if __name__ == "__main__":
     parser.add_argument('--log-every', type=int, default=100)
     parser.add_argument('--plot-every', type=int, default=2000)
     parser.add_argument('--repeat', type=int, default=1)
-    parser.add_argument('--method', type=str, default="adam")
+    # parser.add_argument('--method', type=str, default="adam")
+    parser.add_argument('--method', type=str, default="multiadam")
 
     command_args = parser.parse_args()
 

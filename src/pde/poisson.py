@@ -5,9 +5,15 @@ import deepxde as dde
 from . import baseclass
 from ..utils.func_cache import cache_tensor
 
+@torch.no_grad()
+def make_lln(*components, eps=1):
+    denom = eps + sum([torch.abs(c) for c in components])
+    return denom
+
+
 class Poisson1D(baseclass.BasePDE):
 
-    def __init__(self, a=1):
+    def __init__(self, a=1, use_lln=False):
         super().__init__()
         # Output Dim
         self.output_dim = 1
@@ -21,7 +27,8 @@ class Poisson1D(baseclass.BasePDE):
 
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
-            return u_xx + f(x)
+            fx = f(x)
+            return (u_xx + fx) / make_lln(u_xx, fx) if use_lln else u_xx + fx
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -38,7 +45,7 @@ class Poisson1D(baseclass.BasePDE):
 
 class Poisson2D_Classic(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1):
+    def __init__(self, datapath="ref/poisson1_cg_data.dat", scale=1, use_lln=False):
         super().__init__()
         # Output Dim
         self.output_dim = 1
@@ -55,7 +62,7 @@ class Poisson2D_Classic(baseclass.BasePDE):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
 
-            return [u_xx + u_yy]
+            return [(u_xx + u_yy) / make_lln(u_xx, u_yy)] if use_lln else [u_xx + u_yy]
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -94,7 +101,16 @@ class Poisson2D_Classic(baseclass.BasePDE):
 
 class PoissonBoltzmann2D(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/poisson_boltzmann2d.dat", k=8, mu=(1, 4), A=10, bbox=[-1, 1, -1, 1], circ=[(0.5, 0.5, 0.2), (0.4, -0.4, 0.4), (-0.2, -0.7, 0.1), (-0.6, 0.5, 0.3)]):
+    def __init__(
+            self,
+            datapath="ref/poisson_boltzmann2d.dat",
+            k=8,
+            mu=(1, 4),
+            A=10,
+            bbox=[-1, 1, -1, 1],
+            circ=[(0.5, 0.5, 0.2), (0.4, -0.4, 0.4), (-0.2, -0.7, 0.1), (-0.6, 0.5, 0.3)],
+            use_lln=False,
+    ):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -117,7 +133,9 @@ class PoissonBoltzmann2D(baseclass.BasePDE):
                 return A * (mu[0]**2 + x**2 + mu[1]**2 + y**2) \
                          * torch.sin(mu[0] * torch.pi * x) * torch.sin(mu[1] * torch.pi * y)
 
-            return -(u_xx + u_yy) + k**2 * u - f(x)
+            fx = f(x)
+            eq = (-(u_xx + u_yy) + k ** 2 * u - fx)
+            return eq / make_lln(u_xx, u_yy, k ** 2 * u, fx) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -161,7 +179,8 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
         A=(20, 100),
         m=(1, 10, 5),
         k=(8, 10),
-        mu=(1, 1)
+        mu=(1, 1),
+        use_lln=False,
     ):
         super().__init__()
         # output dim
@@ -190,7 +209,9 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
 
             mus = torch.where(x[:, 2] < interface_z, mu[0], mu[1]).unsqueeze(dim=-1)
             ks = torch.where(x[:, 2] < interface_z, k[0]**2, k[1]**2).unsqueeze(dim=-1)
-            return -mus * (u_xx + u_yy + u_zz) + ks * u - f(x)
+            fx = f(x)
+            eq = -mus * (u_xx + u_yy + u_zz) + ks * u - fx
+            return eq / make_lln(mus*u_xx, mus*u_yy, mus*u_zz, ks * u, fx) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -206,7 +227,7 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
 
 class Poisson2D_ManyArea(baseclass.BasePDE):
 
-    def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2):
+    def __init__(self, datapath="ref/poisson_manyarea.dat", bbox=[-10, 10, -10, 10], split=(5, 5), freq=2, use_lln=False):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -255,7 +276,8 @@ class Poisson2D_ManyArea(baseclass.BasePDE):
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
 
             a, f = get_coef(x)
-            return a * (u_xx + u_yy) + f
+            eq = a * (u_xx + u_yy) + f
+            return eq / make_lln(a * u_xx, a * u_yy, f) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -276,7 +298,7 @@ class Poisson2D_ManyArea(baseclass.BasePDE):
 
 class PoissonND(baseclass.BasePDE):
 
-    def __init__(self, dim=5, len=1):
+    def __init__(self, dim=5, len=1, use_lln=False):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -293,7 +315,9 @@ class PoissonND(baseclass.BasePDE):
             def f(x):
                 return (np.pi**2) / 4 * torch.sin(np.pi / 2 * x).sum(axis=1).reshape(-1, 1)
 
-            return [u_xx + f(x)]
+            fx = f(x)
+            eq = u_xx + fx
+            return [eq / make_lln(u_xx, fx)] if use_lln else [eq]
 
         self.pde = pde
         self.set_pdeloss(num=1)
