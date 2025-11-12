@@ -35,13 +35,13 @@ from src.utils.rar import rar_wrapper
 # pde_list = [(Poisson2D_Classic, {"scale": 8})]
 
 
-USE_LLM = False
+USE_LLN = False
 pde_list = [
-    (Poisson2D_Classic, {"use_llm": USE_LLM}),
-    (PoissonBoltzmann2D, {"use_llm": USE_LLM}),
-    (Poisson3D_ComplexGeometry, {"use_llm": USE_LLM}),
-    (Poisson2D_ManyArea, {"use_llm": USE_LLM}),
-    (PoissonND, {"use_llm": USE_LLM}),
+    (Poisson2D_Classic, {"use_lln": USE_LLN}),
+    (PoissonBoltzmann2D, {"use_lln": USE_LLN}),
+    (Poisson3D_ComplexGeometry, {"use_lln": USE_LLN}),
+    (Poisson2D_ManyArea, {"use_lln": USE_LLN}),
+    (PoissonND, {"use_lln": USE_LLN}),
 
 ]
 
