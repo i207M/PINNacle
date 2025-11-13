@@ -7,11 +7,11 @@ from . import baseclass
 from ..utils.func_cache import cache_tensor
 from ..utils.geom import CSGMultiDifference
 from ..utils.random import generate_heat_2d_coef
-
+from .lln_utils import make_lln
 
 class Heat2D_VaryingCoef(baseclass.BaseTimePDE):
 
-    def __init__(self, datapath="ref/heat_darcy.dat", bbox=[0, 1, 0, 1, 0, 5], A=200, m=(1, 5, 1)):
+    def __init__(self, datapath="ref/heat_darcy.dat", bbox=[0, 1, 0, 1, 0, 5], A=200, m=(1, 5, 1), use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -24,6 +24,9 @@ class Heat2D_VaryingCoef(baseclass.BaseTimePDE):
         # PDE
         # self.heat_2d_coef = generate_heat_2d_coef(N_res=256, alpha=4, bbox=bbox[0:4])
         self.heat_2d_coef = np.loadtxt("ref/heat_2d_coef_256.dat")
+
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         @cache_tensor
         def coef(x):
@@ -38,7 +41,10 @@ class Heat2D_VaryingCoef(baseclass.BaseTimePDE):
             def f(x):
                 return A * torch.sin(m[0] * torch.pi * x[:, 0:1]) * torch.sin(m[1] * torch.pi * x[:, 1:2]) * torch.sin(m[2] * torch.pi * x[:, 2:3])
 
-            return [u_t - coef(x) * u_xx - f(x)]
+            coef_x_u_xx = coef(x) * u_xx
+            fx = f(x)
+
+            return [(u_t - coef_x_u_xx - fx) / (make_lln(u_t, coef_x_u_xx, fx, eps=lln_eps) if use_lln else 1)]
 
         self.pde = heat_pde
         self.set_pdeloss(num=1)
@@ -75,6 +81,8 @@ class Heat2D_Multiscale(baseclass.BaseTimePDE):
         bbox=[0, 1, 0, 1, 0, 5], 
         pde_coef=(1 / np.square(500 * np.pi), 1 / np.square(np.pi)), 
         init_coef=(20 * np.pi, np.pi),
+        use_lln=False,
+        lln_eps=1,
     ):
         super().__init__()
         # output dim
@@ -85,12 +93,17 @@ class Heat2D_Multiscale(baseclass.BaseTimePDE):
         timedomain = dde.geometry.TimeDomain(bbox[4], bbox[5])
         self.geomtime = dde.geometry.GeometryXTime(self.geom, timedomain)
 
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
+
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
             u_t = dde.grad.jacobian(u, x, j=2)
 
-            return [u_t - pde_coef[0] * u_xx - pde_coef[1] * u_yy]
+            pde_coef_u_xx = pde_coef[0] * u_xx
+            pde_coef_u_yy = pde_coef[1] * u_yy
+            return [(u_t - pde_coef_u_xx - pde_coef_u_yy) / (make_lln(u_t, pde_coef_u_xx, pde_coef_u_yy, eps=lln_eps) if use_lln else 1)]
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -121,7 +134,7 @@ class Heat2D_Multiscale(baseclass.BaseTimePDE):
 
 class Heat2D_ComplexGeometry(baseclass.BaseTimePDE):
 
-    def __init__(self, datapath="ref/heat_complex.dat", bbox=[-8, 8, -12, 12, 0, 3]):
+    def __init__(self, datapath="ref/heat_complex.dat", bbox=[-8, 8, -12, 12, 0, 3], use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -144,12 +157,15 @@ class Heat2D_ComplexGeometry(baseclass.BaseTimePDE):
         geomtime = dde.geometry.GeometryXTime(self.geom, timedomain)
         self.geomtime = geomtime
 
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
+
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
             u_t = dde.grad.jacobian(u, x, j=2)
 
-            return [u_t - u_xx - u_yy]
+            return [(u_t - u_xx - u_yy) / (make_lln(u_t, u_xx, u_yy, eps=lln_eps) if use_lln else 1)]
 
         self.pde = pde
         self.set_pdeloss(num=1)
@@ -197,7 +213,7 @@ class Heat2D_ComplexGeometry(baseclass.BaseTimePDE):
 
 class Heat2D_LongTime(baseclass.BaseTimePDE):
 
-    def __init__(self, datapath="ref/heat_longtime.dat", bbox=[0, 1, 0, 1, 0, 100], k=1, m1=4, m2=2):
+    def __init__(self, datapath="ref/heat_longtime.dat", bbox=[0, 1, 0, 1, 0, 100], k=1, m1=4, m2=2, use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -211,14 +227,17 @@ class Heat2D_LongTime(baseclass.BaseTimePDE):
         INITIAL_COEF_1 = 4 * np.pi
         INITIAL_COEF_2 = 3 * np.pi
 
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
+
         def pde(x, u):
             u_xx = dde.grad.hessian(u, x, i=0, j=0)
             u_yy = dde.grad.hessian(u, x, i=1, j=1)
             u_t = dde.grad.jacobian(u, x, j=2)
 
+            sins = 5 * torch.sin(k * torch.square(u)) * (1 + 2 * torch.sin(x[:, 2:3] * np.pi / 4)) * torch.sin(m1 * np.pi * x[:, 0:1]) * torch.sin(m2 * np.pi * x[:, 1:2])
             return [
-                u_t - 0.001 * (u_xx + u_yy) - 5 * torch.sin(k * torch.square(u)) *
-                (1 + 2 * torch.sin(x[:, 2:3] * np.pi / 4)) * torch.sin(m1 * np.pi * x[:, 0:1]) * torch.sin(m2 * np.pi * x[:, 1:2])
+                (u_t - 0.001 * (u_xx + u_yy) - sins) / (make_lln(u_t, 0.001 * u_xx, 0.001 * u_yy, sins, eps=lln_eps) if use_lln else 1)
             ]
 
         self.pde = pde
@@ -248,7 +267,7 @@ class Heat2D_LongTime(baseclass.BaseTimePDE):
 
 class HeatND(baseclass.BaseTimePDE):
 
-    def __init__(self, dim=5, T=1):
+    def __init__(self, dim=5, T=1, use_lln=False, lln_eps=1):
         super().__init__()
         # output dim
         self.output_dim = 1
@@ -257,6 +276,9 @@ class HeatND(baseclass.BaseTimePDE):
         self.geom = dde.geometry.Hypersphere([0] * dim, 1)
         timedomain = dde.geometry.TimeDomain(0, T)
         self.geomtime = dde.geometry.GeometryXTime(self.geom, timedomain)
+
+        if use_lln:
+            print(f"Using LLN normalization with eps={lln_eps}")
 
         # pde
         def xnorm(xt):
@@ -272,7 +294,9 @@ class HeatND(baseclass.BaseTimePDE):
                 x2, t = xnorm(xt), xt[:, -1:]
                 return -1 / dim * x2 * torch.exp(x2 / 2 + t)
 
-            return 1 / dim * u_xx + f(x) - u_t
+            fx = f(x)
+            u_xx_dim = 1 / dim * u_xx
+            return (u_xx_dim + fx - u_t) / (make_lln(u_xx_dim, fx, u_t, eps=lln_eps) if use_lln else 1)
 
         self.pde = pde
         self.set_pdeloss(num=1)

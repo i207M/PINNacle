@@ -35,13 +35,24 @@ from src.utils.rar import rar_wrapper
 # pde_list = [(Poisson2D_Classic, {"scale": 8})]
 
 
-pde_list = [
+poisson_list = [
     Poisson2D_Classic, # 3
     PoissonBoltzmann2D, # 4
     Poisson3D_ComplexGeometry, # 5
     Poisson2D_ManyArea, # 6
     PoissonND, # 19
 ]
+
+heat_list = [
+Heat2D_VaryingCoef, # 7
+Heat2D_Multiscale, # 8
+# Heat2D_ComplexGeometry, # 9
+# Heat2D_LongTime, # 10
+# HeatND # 20
+]
+
+
+pde_list = heat_list
 
 # pde_list += \
 #     [(Burgers2D, {"datapath": "ref/burgers2d_1.dat", "icpath": ("ref/burgers2d_init_u_1.dat", "ref/burgers2d_init_v_1.dat")})] + \

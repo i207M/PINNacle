@@ -3,12 +3,8 @@ import torch
 
 import deepxde as dde
 from . import baseclass
+from .lln_utils import make_lln
 from ..utils.func_cache import cache_tensor
-
-@torch.no_grad()
-def make_lln(*components, eps=1):
-    denom = eps + sum([torch.abs(c) for c in components])
-    return denom
 
 
 class Poisson1D(baseclass.BasePDE):
@@ -224,7 +220,7 @@ class Poisson3D_ComplexGeometry(baseclass.BasePDE):
             ks = torch.where(x[:, 2] < interface_z, k[0]**2, k[1]**2).unsqueeze(dim=-1)
             fx = f(x)
             eq = -mus * (u_xx + u_yy + u_zz) + ks * u - fx
-            return eq / make_lln(mus*u_xx, mus*u_yy, mus*u_zz, ks * u, fx, eps=lln_eps) if use_lln else eq
+            return eq / make_lln(mus * u_xx, mus * u_yy, mus * u_zz, ks * u, fx, eps=lln_eps) if use_lln else eq
 
         self.pde = pde
         self.set_pdeloss(num=1)
