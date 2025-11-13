@@ -44,11 +44,11 @@ poisson_list = [
 ]
 
 heat_list = [
-Heat2D_VaryingCoef, # 7
-Heat2D_Multiscale, # 8
-# Heat2D_ComplexGeometry, # 9
-# Heat2D_LongTime, # 10
-# HeatND # 20
+    Heat2D_VaryingCoef,  # 7
+    Heat2D_Multiscale,  # 8
+    Heat2D_ComplexGeometry,  # 9
+    Heat2D_LongTime,  # 10
+    HeatND  # 20
 ]
 
 
