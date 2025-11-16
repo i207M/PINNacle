@@ -68,6 +68,7 @@ class Trainer:
 
     def train_all(self):
         if len(self.device) > 1:
+            print('Using multi-processing training on devices:', self.device)
             return self.train_all_parallel()
 
         # no multi-processing when only one device is available
